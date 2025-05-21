@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { 
   Sun, Moon, Lightbulb, Zap, Video, Sparkles, 
@@ -85,7 +85,7 @@ export default function Home() {
     });
 
     return () => observer.disconnect();
-  }, [refs]);
+  }, []);
 
   const handleNavClick = (id: string) => {
     setActiveSection(id);
