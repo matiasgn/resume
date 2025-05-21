@@ -1,103 +1,487 @@
-import Image from "next/image";
+"use client";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useEffect, useState, useRef } from "react";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { 
+  Sun, Moon, Lightbulb, Zap, Video, Sparkles, 
+  GraduationCap, Briefcase, Code2, Mail, Phone, 
+  Github, Twitter, MessageCircle, ArrowRight
+} from "lucide-react";
+
+const SECTIONS = [
+  { id: "presentacion", label: "Presentación" },
+  { id: "formacion", label: "Formación" },
+  { id: "experiencia", label: "Experiencia" },
+  { id: "habilidades", label: "Habilidades" },
+  { id: "hobbies", label: "Hobbies" },
+  { id: "contacto", label: "Contacto" },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState("presentacion");
+  const activeSectionRef = useRef(activeSection);
+  const [lastNavClick, setLastNavClick] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Estado para animación de entrada de sección
+  const [animatedSection, setAnimatedSection] = useState<string | null>("presentacion");
+
+  // Actualizar la ref cuando cambia activeSection
+  useEffect(() => {
+    activeSectionRef.current = activeSection;
+  }, [activeSection]);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // refs para scroll suave
+  const refs = {
+    presentacion: useRef<HTMLDivElement>(null),
+    formacion: useRef<HTMLDivElement>(null),
+    experiencia: useRef<HTMLDivElement>(null),
+    habilidades: useRef<HTMLDivElement>(null),
+    hobbies: useRef<HTMLDivElement>(null),
+    contacto: useRef<HTMLDivElement>(null),
+  };
+
+  // Modificar el useEffect del IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const currentSection = entry.target.id;
+            const currentRect = entry.target.getBoundingClientRect();
+            const currentDistance = Math.abs(currentRect.top);
+
+            // Usamos la ref en lugar del estado directamente
+            const currentActiveRect = refs[activeSectionRef.current as keyof typeof refs]?.current?.getBoundingClientRect();
+            const currentActiveDistance = currentActiveRect ? Math.abs(currentActiveRect.top) : Infinity;
+
+            if (currentDistance < currentActiveDistance) {
+              setActiveSection(currentSection);
+            }
+          }
+        });
+      },
+      {
+        rootMargin: "-20% 0px -80% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1]
+      }
+    );
+
+    Object.values(refs).forEach((ref) => {
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []); // Ya no necesitamos activeSection como dependencia
+
+  const handleNavClick = (id: string) => {
+    setActiveSection(id);
+    setAnimatedSection(id);
+    const element = refs[id as keyof typeof refs]?.current;
+    if (element) {
+      const navHeight = 60;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  return (
+    <>
+      {/* Navbar fijo */}
+      <nav className="fixed top-0 left-0 w-full z-20 bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border-b border-border flex justify-center shadow-sm transition-colors">
+        <ul className="flex gap-4 py-3 relative">
+          {/* Indicador deslizante */}
+          <motion.div 
+            className="absolute bottom-0 h-0.5 bg-miku dark:bg-mikuLight rounded-full"
+            initial={false}
+            animate={{
+              width: '80px',
+              x: SECTIONS.findIndex(s => s.id === activeSection) * (80 + 16),
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30
+            }}
+          />
+          {SECTIONS.map((section) => (
+            <li key={section.id} className="relative">
+              <button
+                onClick={() => handleNavClick(section.id)}
+                className={`px-4 py-1 rounded-full font-medium transition-colors duration-200 relative overflow-hidden
+                  ${activeSection === section.id ? "text-miku dark:text-mikuLight" : "text-muted-foreground hover:text-miku dark:hover:text-mikuLight"}
+                `}
+                tabIndex={0}
+              >
+                {activeSection === section.id && (
+                  <motion.span
+                    className="absolute inset-0 rounded-full bg-miku/20 dark:bg-mikuLight/20 z-0"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{section.label}</span>
+              </button>
+          </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Botón flotante de cambio de tema */}
+      <div className="fixed top-4 right-4 z-30">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="h-9 w-9 rounded-full bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border border-border shadow-sm hover:bg-background/90 dark:hover:bg-[#181A1B]/90"
+        >
+          {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
+        </Button>
+      </div>
+
+      <main className="relative z-10 min-h-screen flex flex-col items-center bg-background px-4 pt-20">
+        <motion.header
+          ref={refs.presentacion}
+          className="flex flex-col items-center gap-4 mt-12 mb-8 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'presentacion' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'presentacion') setAnimatedSection(null); }}
+        >
+          <div className="relative">
+            <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-miku to-mikuLight opacity-20 blur-lg"></div>
+            <div className="relative bg-background/80 backdrop-blur-sm p-8 rounded-lg border border-border">
+              <motion.h1 
+                className="text-4xl font-bold text-foreground text-center"
+                initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                Matias Guerrero
+              </motion.h1>
+              <motion.h2 
+                className="text-xl text-muted-foreground text-center mt-2"
+                initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                Desarrollador Full Stack
+              </motion.h2>
+              <motion.p 
+                className="max-w-xl text-center text-muted-foreground mt-4"
+                initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                Desarrollador Full Stack con experiencia en gestión documental, sistemas de trazabilidad y software educativo. Actualmente en Xinerlink, trabajando en la nube. Me apasiona la tecnología y disfruto experimentar con hardware y software, especialmente usando placas electrónicas. También me interesa el arte digital y los proyectos creativos.
+              </motion.p>
+            </div>
+          </div>
+        </motion.header>
+
+        <motion.section
+          key={lastNavClick === 'formacion' ? Date.now() : 'formacion'}
+          ref={refs.formacion}
+          id="formacion"
+          className="w-full max-w-2xl mt-12 flex flex-col gap-6 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'formacion' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'formacion') setAnimatedSection(null); }}
+        >
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">Formación</h2>
+          </div>
+          <div className="grid gap-4">
+            {[
+              {
+                title: "Ingeniería de Ejecución en Informática",
+                description: "AIEP República, Santiago (2021 - 2023)"
+              },
+              {
+                title: "Analista Programador",
+                description: "DuocUC Alonso de Ovalle (2014 - 2017)"
+              },
+              {
+                title: "Técnico en Electricidad Industrial",
+                description: "Talleres San Vicente de Paul (2011 - 2013)"
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={animatedSection === 'formacion' ? { opacity: 0, x: -20 } : false}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+                  <CardHeader>
+                    <CardTitle>{item.title}</CardTitle>
+                    <CardDescription>{item.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        <motion.section
+          ref={refs.experiencia}
+          id="experiencia"
+          className="w-full max-w-2xl mt-12 flex flex-col gap-6 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'experiencia' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'experiencia') setAnimatedSection(null); }}
+        >
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">Experiencia profesional</h2>
+          </div>
+          <div className="grid gap-4">
+            {[
+              {
+                title: "Desarrollador Full Stack",
+                company: "Xinerlink",
+                description: "Xinerlink (Remoto) | Ago 2021 - Actualidad",
+                content: `Desarrollo y mantenimiento de software en proyectos de gestión documental en áreas de RRHH y para clientes como Caja Los Andes. Trabajo con AWS Lambda, Amplify, DynamoDB, S3, integraciones con Google Drive y migraciones de millones de documentos.`,
+                technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Migración de documentos"]
+              },
+              {
+                title: "Desarrollador Full Stack (Freelance)",
+                company: "USACH",
+                description: "USACH (Remoto) | Ago 2023 - Ene 2024",
+                content: "Proyecto de Sistema trazabilidad documental (STD2). Creación de nuevos módulos, mejoras y nuevas funcionalidades.",
+                technologies: ["Laravel 10", "Inertia", "Vue 3"]
+              },
+              {
+                title: "Desarrollador Full Stack",
+                company: "Lirmi",
+                description: "Lirmi (Remoto) | Abr 2021 - Ago 2021",
+                content: "Desarrollo de software de gestión curricular con enfoque en planificación, evaluación y libro de clases digital.",
+                technologies: ["VueJS", "Laravel", "Bulma", "PostgreSQL"]
+              },
+              {
+                title: "Analista Programador",
+                company: "Xinerlink",
+                description: "Xinerlink, Santiago | Nov 2018 - Abr 2021",
+                content: `Proponer soluciones innovadoras, crear maquetas, desarrollar backend y frontend, asegurar integración con otros sistemas.`,
+                technologies: ["PHP POO", "jQuery", "SQL Server", "Transact-SQL", "Highchart", "AdminLTE"]
+              },
+              {
+                title: "Programador",
+                company: "Ventas Técnicas",
+                description: "Ventas Técnicas, Santiago | Jun 2018 - Nov 2018",
+                content: "Generación de informes KPI con Transact-SQL, desarrollo de interfaces de datos, mantenimiento de portal de indicadores con Highchart.",
+                technologies: ["Transact-SQL", "C#", "Highchart", "PHP", "Visual Studio", ".NET"]
+              },
+              {
+                title: "Práctica Analista Programador",
+                company: "Rheem Chile",
+                description: "Rheem Chile, Estación Central | Feb 2018 - Mar 2018",
+                content: `Desarrollo de sistema para mantención industrial desde cero: levantamiento de requerimientos, modelado y desarrollo completo. Tecnologías usadas: PHP7 (POO), MySQL, AdminLTE, Bootstrap y jQuery.`,
+                technologies: ["PHP7 (POO)", "MySQL", "AdminLTE", "Bootstrap", "jQuery"]
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={`${item.title}-${item.company}`}
+                initial={animatedSection === 'experiencia' ? { opacity: 0, x: 20 } : false}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+                  <CardHeader>
+                    <CardTitle>{item.title}</CardTitle>
+                    <CardDescription>{item.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-muted-foreground text-sm">
+                    {item.content}
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {item.technologies?.map((tech) => (
+                        <Badge key={tech} variant="secondary">{tech}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        </motion.section>
+
+        <motion.section
+          ref={refs.habilidades}
+          id="habilidades"
+          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-16 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'habilidades' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'habilidades') setAnimatedSection(null); }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <div className="flex items-center gap-2">
+            <Code2 className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">Habilidades</h2>
+          </div>
+          <motion.div 
+            className="flex flex-wrap gap-2"
+            initial={animatedSection === 'habilidades' ? { opacity: 0 } : false}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, staggerChildren: 0.1 }}
+          >
+            {[
+              "Laravel", "Vue.js", "JavaScript", "Node.js", "SQL", "Git", "Linux", "Python", "C#", "Creatividad", "Proactividad",
+              "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Migración de documentos", "IoT", "DMX", "Art-Net", "ESP32", "WLED", "Resolume"
+            ].map((skill, index) => (
+              <motion.div
+                key={skill}
+                initial={animatedSection === 'habilidades' ? { opacity: 0, scale: 0.8 } : false}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Badge className="hover:scale-105 transition-transform">{skill}</Badge>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        <motion.section
+          ref={refs.hobbies}
+          id="hobbies"
+          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'hobbies' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'hobbies') setAnimatedSection(null); }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h2 className="text-2xl font-semibold text-foreground">Hobbies</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardHeader className="flex flex-row items-center gap-2">
+                <Lightbulb className="h-5 w-5 text-miku dark:text-mikuLight" />
+                <CardTitle className="text-lg">Iluminación LED</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Creo efectos de luz dinámicos y sincronizados con música usando tiras LED inteligentes y microcontroladores.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardHeader className="flex flex-row items-center gap-2">
+                <Zap className="h-5 w-5 text-miku dark:text-mikuLight" />
+                <CardTitle className="text-lg">Sistemas Profesionales</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Utilizo protocolos estándar de la industria (DMX, Art-Net) para controlar luces de escenario y crear instalaciones a gran escala.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardHeader className="flex flex-row items-center gap-2">
+                <Video className="h-5 w-5 text-miku dark:text-mikuLight" />
+                <CardTitle className="text-lg">Visuales en Tiempo Real</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  Integro software de visualización con sistemas de iluminación para crear espectáculos audiovisuales interactivos.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="mt-4 bg-miku/5 dark:bg-mikuLight/5 border-miku/20 dark:border-mikuLight/20">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Sparkles className="h-5 w-5 text-miku dark:text-mikuLight" />
+                <p className="text-sm">
+                  Esta pasión me permite combinar mi experiencia técnica con la creatividad, creando experiencias inmersivas que conectan la tecnología con el arte.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.section>
+
+        <motion.section
+          ref={refs.contacto}
+          id="contacto"
+          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={animatedSection === 'contacto' ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          onAnimationComplete={() => { if (animatedSection === 'contacto') setAnimatedSection(null); }}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="flex items-center gap-2">
+            <Mail className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">Contacto</h2>
+          </div>
+          <Card className="hover:shadow-lg transition-all duration-300">
+            <CardContent className="pt-6">
+              <div className="grid gap-4">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <a href="mailto:matiasguerrero.n@hotmail.com" className="text-muted-foreground hover:text-primary transition-colors">matiasguerrero.n@hotmail.com</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <a href="tel:+56953466236" className="text-muted-foreground hover:text-primary transition-colors">+56 9 5346 6236</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Github className="h-4 w-4 text-muted-foreground" />
+                  <a href="https://github.com/matiasguerreron" target="_blank" rel="noopener" className="text-muted-foreground hover:text-primary transition-colors">GitHub</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-muted-foreground"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                  <a href="https://www.linkedin.com/in/matiasguerreron/" target="_blank" rel="noopener" className="text-muted-foreground hover:text-primary transition-colors">LinkedIn</a>
+                </div>
+              </div>
+              <div className="mt-6 flex gap-4">
+                <Button asChild className="group">
+                  <a href="mailto:matiasguerrero.n@hotmail.com">
+                    Enviar email
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="bg-[#25D366] hover:bg-[#25D366]/90 text-white border-none group">
+                  <a href="https://wa.me/56953466236" target="_blank" rel="noopener">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Hablar por WhatsApp
+                  </a>
+                </Button>
     </div>
+            </CardContent>
+          </Card>
+        </motion.section>
+      </main>
+    </>
   );
 }
