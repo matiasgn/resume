@@ -1,0 +1,97 @@
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+
+interface Demo {
+  title: string;
+  description: string;
+  technologies: string[];
+  demoUrl: string;
+  features: string[];
+  imageUrl: string;
+}
+
+const demos: Demo[] = [
+  {
+    title: "Sistema de Viáticos",
+    description: "Sistema de gestión y control de viáticos empresariales, permitiendo el registro, aprobación y seguimiento de gastos.",
+    technologies: ["Next.js", "TypeScript", "TailwindCSS", "JSON Server"],
+    demoUrl: "https://sistema-viaticos.vercel.app/",
+    features: [
+      "Registro de viáticos",
+      "Aprobación de gastos",
+      "Dashboard de seguimiento",
+      "Reportes y estadísticas"
+    ],
+    imageUrl: "/demos/viaticos-preview.png"
+  },
+  {
+    title: "Sistema de Marcación",
+    description: "Sistema de control de asistencia que permite registrar las entradas y salidas del personal, con funcionalidades de reportes y validaciones automáticas. El sistema está orientado a la gestión eficiente de recursos humanos en empresas y organizaciones.",
+    technologies: ["Laravel", "Inertia.js", "React", "TailwindCSS"],
+    demoUrl: "https://control-asistencia-4o5o.onrender.com/",
+    features: [
+      "Registro de entradas y salidas de empleados",
+      "Validación automática de horarios",
+      "Generación de reportes de asistencia",
+      "Dashboard administrativo con métricas clave",
+      "Interfaz moderna y responsiva"
+    ],
+    imageUrl: "/demos/marcacion-preview.png"
+  }
+];
+
+export function InteractiveDemos() {
+  return (
+    <section className="py-12">
+      <div className="px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          {demos.map((demo, index) => (
+            <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+              <div className="relative h-48 w-full">
+                <Image
+                  src={demo.imageUrl}
+                  alt={demo.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex flex-col flex-1">
+                <CardHeader>
+                  <CardTitle>{demo.title}</CardTitle>
+                  <CardDescription className="mb-2">{demo.description}</CardDescription>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {demo.technologies.map((tech, i) => (
+                      <Badge key={i} variant="secondary">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col">
+                  <ul className="list-disc list-inside space-y-2 mb-4">
+                    {demo.features.map((feature, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto">
+                    <CardFooter className="p-0 pt-2">
+                      <Button asChild className="w-full">
+                        <a href={demo.demoUrl} target="_blank" rel="noopener noreferrer">
+                          Ver Demo
+                        </a>
+                      </Button>
+                    </CardFooter>
+                  </div>
+                </CardContent>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+} 

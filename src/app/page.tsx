@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { InteractiveDemos } from "@/components/InteractiveDemos";
 import { 
   Sun, Moon, Sparkles, 
   GraduationCap, Briefcase, Code2, Mail, Phone, 
-  Github
+  Github, Monitor
 } from "lucide-react";
 
 const SECTIONS = [
@@ -16,6 +17,7 @@ const SECTIONS = [
   { id: "formacion", label: "Formación" },
   { id: "experiencia", label: "Experiencia" },
   { id: "habilidades", label: "Habilidades" },
+  { id: "maquetas", label: "Maquetas" },
   { id: "hobbies", label: "Hobbies" },
   { id: "contacto", label: "Contacto" },
 ];
@@ -42,6 +44,7 @@ export default function Home() {
   const formacionRef = useRef<HTMLDivElement>(null);
   const experienciaRef = useRef<HTMLDivElement>(null);
   const habilidadesRef = useRef<HTMLDivElement>(null);
+  const maquetasRef = useRef<HTMLDivElement>(null);
   const hobbiesRef = useRef<HTMLDivElement>(null);
   const contactoRef = useRef<HTMLDivElement>(null);
 
@@ -50,6 +53,7 @@ export default function Home() {
     formacion: formacionRef,
     experiencia: experienciaRef,
     habilidades: habilidadesRef,
+    maquetas: maquetasRef,
     hobbies: hobbiesRef,
     contacto: contactoRef,
   };
@@ -114,6 +118,7 @@ export default function Home() {
     formacion: Record<'es' | 'en', string>;
     experiencia: Record<'es' | 'en', string>;
     habilidades: Record<'es' | 'en', string>;
+    maquetas: Record<'es' | 'en', string>;
     hobbies: Record<'es' | 'en', string>;
     contacto: Record<'es' | 'en', string>;
     presentacionText: Record<'es' | 'en', string>;
@@ -151,6 +156,10 @@ export default function Home() {
     habilidades: {
       es: "Habilidades",
       en: "Skills"
+    },
+    maquetas: {
+      es: "Maquetas Interactivas",
+      en: "Interactive Demos"
     },
     hobbies: {
       es: "Hobbies",
@@ -554,60 +563,50 @@ export default function Home() {
         <motion.section
           ref={refs.habilidades}
           id="habilidades"
-          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-4 mb-16 scroll-mt-24"
-          initial={{ opacity: 0, y: 20 }}
-          animate={animatedSection === 'habilidades' ? { opacity: 1, y: 0 } : {}}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          onAnimationComplete={() => { if (animatedSection === 'habilidades') setAnimatedSection(null); }}
+          className={`py-20 ${animatedSection === "habilidades" ? "animate-fade-in" : ""}`}
         >
-          <div className="flex items-center gap-2">
-            <Code2 className="h-6 w-6 text-miku dark:text-mikuLight" />
-            <h2 className="text-2xl font-semibold text-foreground">{t.habilidades[language]}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(t.skillsByCategory[language]).map(([cat, skills]) => (
-              <div key={cat}>
-                <h3 className="font-semibold text-miku dark:text-mikuLight mb-2 text-base">{cat}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill) => (
-                    <Badge key={skill} className="hover:scale-105 transition-transform">{skill}</Badge>
-                  ))}
+          <div className="w-full max-w-4xl mx-auto px-4">
+            <div className="flex items-center gap-2 mb-6">
+              <Code2 className="h-6 w-6 text-miku dark:text-mikuLight" />
+              <h2 className="text-2xl font-semibold text-foreground">{t.habilidades[language]}</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full justify-center">
+              {Object.entries(t.skillsByCategory[language]).map(([cat, skills]) => (
+                <div key={cat} className="max-w-md">
+                  <h3 className="font-semibold text-miku dark:text-mikuLight mb-2 text-base">{cat}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill) => (
+                      <Badge key={skill} className="hover:scale-105 transition-transform">{skill}</Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </motion.section>
 
-        {/* Sección de Proyectos Destacados */}
-        <motion.section
-          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-6 mb-16 scroll-mt-24"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        {/* Sección de Maquetas Interactivas */}
+        <section
+          ref={maquetasRef}
+          id="maquetas"
+          className={`py-20 ${animatedSection === "maquetas" ? "animate-fade-in" : ""}`}
         >
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-miku dark:text-mikuLight" />
-            <h2 className="text-2xl font-semibold text-foreground">{language === 'es' ? 'Proyectos Destacados' : 'Featured Projects'}</h2>
+          <div className="w-full max-w-4xl mx-auto px-4">
+            <div className="flex items-center gap-2 mb-6">
+              <Monitor className="h-6 w-6 text-miku dark:text-mikuLight" />
+              <h2 className="text-2xl font-semibold text-foreground">
+                {t.maquetas[language]}
+              </h2>
+            </div>
+            <InteractiveDemos />
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {t.featuredProjects.map((proj) => (
-              <Card key={proj[language].title} className="hover:shadow-lg transition-shadow duration-300">
-                <CardHeader>
-                  <CardTitle>{proj[language].title}</CardTitle>
-                  <CardDescription>{proj[language].description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </motion.section>
+        </section>
 
+        {/* Sección de Hobbies */}
         <motion.section
           ref={refs.hobbies}
           id="hobbies"
-          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
+          className="w-full max-w-4xl mx-auto px-4 mt-8 md:mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'hobbies' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -615,47 +614,47 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           onAnimationComplete={() => { if (animatedSection === 'hobbies') setAnimatedSection(null); }}
         >
-          <h2 className="text-2xl font-semibold text-foreground">{t.hobbies[language]}</h2>
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">{t.hobbies[language]}</h2>
+          </div>
           <Card className="hover:shadow-lg transition-shadow duration-300">
             <CardContent className="pt-6">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-miku dark:text-mikuLight" />
-                    <h3 className="text-lg font-semibold">{t.artisticLighting[language]}</h3>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {t.artisticLightingDesc[language]}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    <Badge variant="secondary">WS2811</Badge>
-                    <Badge variant="secondary">ESP32</Badge>
-                    <Badge variant="secondary">Resolume</Badge>
-                    <Badge variant="secondary">DMX</Badge>
-                    <Badge variant="secondary">Art-Net</Badge>
-                    <Badge variant="secondary">WLED</Badge>
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold">{t.artisticLighting[language]}</h3>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" className="gap-2" asChild>
-                    <a href="https://www.youtube.com/watch?v=cuT-VU4PR54&t=4630s" target="_blank" rel="noopener">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
-                      {t.verSesion[language]}
-                    </a>
-                  </Button>
-                  <Button variant="outline" size="sm" className="gap-2" asChild>
-                    <a href="https://www.youtube.com/@FRACTAL_SESSIONS" target="_blank" rel="noopener">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
-                      {t.canalYoutube[language]}
-                    </a>
-                  </Button>
-                  <Button variant="outline" size="sm" className="gap-2" asChild>
-                    <a href="https://www.instagram.com/fractal_sessions/" target="_blank" rel="noopener">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-                      {t.instagram[language]}
-                    </a>
-                  </Button>
+                <p className="text-muted-foreground text-sm">
+                  {t.artisticLightingDesc[language]}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                  <Badge variant="secondary">WS2811</Badge>
+                  <Badge variant="secondary">ESP32</Badge>
+                  <Badge variant="secondary">Resolume</Badge>
+                  <Badge variant="secondary">DMX</Badge>
+                  <Badge variant="secondary">Art-Net</Badge>
+                  <Badge variant="secondary">WLED</Badge>
                 </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" className="gap-2" asChild>
+                  <a href="https://www.youtube.com/watch?v=cuT-VU4PR54&t=4630s" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+                    {t.verSesion[language]}
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" asChild>
+                  <a href="https://www.youtube.com/@FRACTAL_SESSIONS" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+                    {t.canalYoutube[language]}
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" asChild>
+                  <a href="https://www.instagram.com/fractal_sessions/" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                    {t.instagram[language]}
+                  </a>
+                </Button>
               </div>
             </CardContent>
           </Card>
