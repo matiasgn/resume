@@ -91,7 +91,7 @@ export default function Home() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [refs]);
 
   const handleNavClick = (id: string) => {
     setActiveSection(id);
@@ -117,6 +117,10 @@ export default function Home() {
     hobbies: Record<'es' | 'en', string>;
     contacto: Record<'es' | 'en', string>;
     presentacionText: Record<'es' | 'en', string>;
+    professionalSummary: Record<'es' | 'en', string>;
+    skillsByCategory: Record<'es' | 'en', Record<string, string[]>>;
+    featuredProjects: Array<Record<'es' | 'en', { title: string; description: string; link: string }>>;
+    hobbiesList: Record<'es' | 'en', string[]>;
     education: Array<Record<'es' | 'en', { title: string; description: string }>>;
     experiences: Array<Record<'es' | 'en', { title: string; company: string; description: string; content: string; technologies: string[] }>>;
     skills: Record<'es' | 'en', string[]>;
@@ -157,8 +161,56 @@ export default function Home() {
       en: "Contact"
     },
     presentacionText: {
-      es: "Desarrollador Full Stack con experiencia en el desarrollo de soluciones empresariales y sistemas de gestión documental. Me apasiona la tecnología en todas sus formas, desde el desarrollo web hasta la electrónica y la automatización. Actualmente trabajo en Xinerlink, donde participo en proyectos en la nube y desarrollo de integraciones. En mi tiempo libre, me dedico a crear proyectos innovadores como sistemas de iluminación LED para espectáculos audiovisuales. Siempre estoy aprendiendo y explorando nuevas formas de combinar el software con el hardware para crear experiencias interactivas únicas.",
-      en: "Full Stack Developer with experience in enterprise solutions and document management systems. I'm passionate about technology in all its forms, from web development to electronics and automation. Currently working at Xinerlink, where I participate in cloud projects and integration development. In my free time, I create innovative projects such as LED lighting systems for audiovisual shows. I'm always learning and exploring new ways to combine software with hardware to create unique interactive experiences."
+      es: "Con experiencia en el desarrollo de soluciones empresariales y sistemas de gestión documental. Me apasiona la tecnología en todas sus formas, desde el desarrollo web hasta la electrónica y la automatización. Actualmente trabajo en Xinerlink, donde participo en proyectos en la nube y desarrollo de integraciones. En mi tiempo libre, me dedico a crear proyectos innovadores como sistemas de iluminación LED para espectáculos audiovisuales. Siempre estoy aprendiendo y explorando nuevas formas de combinar el software con el hardware para crear experiencias interactivas únicas.",
+      en: "With experience in the development of enterprise solutions and document management systems. I am passionate about technology in all its forms, from web development to electronics and automation. Currently working at Xinerlink, where I participate in cloud projects and integration development. In my free time, I create innovative projects such as LED lighting systems for audiovisual shows. I am always learning and exploring new ways to combine software with hardware to create unique interactive experiences."
+    },
+    professionalSummary: {
+      es: "Desarrollador fullstack con foco en Laravel y Vue.js. Experiencia liderando proyectos escalables, con especial interés en automatización, IoT y optimización de procesos. Apasionado por la mejora continua y el aprendizaje autodidacta.",
+      en: "Fullstack developer focused on Laravel and Vue.js. Experience leading scalable projects, with a special interest in automation, IoT, and process optimization. Passionate about continuous improvement and self-taught learning."
+    },
+    skillsByCategory: {
+      es: {
+        Frontend: ["Vue.js", "React", "HTML", "CSS", "JavaScript", "Bulma", "Material UI", "Tailwind", "jQuery"],
+        Backend: ["Laravel", "PHP", "Node.js", "C#", "SQL", "MySQL", "PostgreSQL", "Amplify", "AWS Lambda", "API REST", "Python"],
+        DevOps: ["Docker", "AWS", "S3", "Git"],
+        Otros: ["Arduino", "IoT", "Automatización", "Art-Net", "DMX"]
+      },
+      en: {
+        Frontend: ["Vue.js", "React", "HTML", "CSS", "JavaScript", "Bulma", "Material UI", "Tailwind", "jQuery"],
+        Backend: ["Laravel", "PHP", "Node.js", "C#", "SQL", "MySQL", "PostgreSQL", "Amplify", "AWS Lambda", "REST API", "Python"],
+        DevOps: ["Docker", "AWS", "S3", "Git"],
+        Others: ["Arduino", "IoT", "Automation", "Art-Net", "DMX"]
+      }
+    },
+    featuredProjects: [
+      {
+        es: {
+          title: "DOCS IA",
+          description: "Plataforma en desarrollo para la gestión y cuadratura de documentos laborales obligatorios, integrando IA (Gemini API) para extracción y categorización automática de datos desde documentos. Permite consultar múltiples fuentes (incluyendo sistemas de terceros), realizar búsquedas avanzadas de trabajadores, contratos y documentos asociados, y descargar información de forma masiva. El frontend está desarrollado con React y Amplify; el backend utiliza funciones serverless en GCP, AWS Lambda, S3 y DynamoDB. Actualmente participo en el equipo a cargo del buscador principal y funcionalidades clave de consulta y descarga.",
+          link: ""
+        },
+        en: {
+          title: "DOCS IA",
+          description: "A platform in development for managing and reconciling mandatory HR documents, integrating AI (Gemini API) for automatic data extraction and categorization from documents. Enables advanced search across multiple sources (including third-party systems), search for employees, contracts, and associated documents, and bulk downloads. The frontend is built with React and Amplify; the backend uses serverless functions on GCP, AWS Lambda, S3, and DynamoDB. I am currently part of the team responsible for the main search engine and key query/download features.",
+          link: ""
+        }
+      }
+    ],
+    hobbiesList: {
+      es: [
+        "Iluminación artística y tecnología creativa",
+        "Participación en comunidades tech (Discord, foros)",
+        "Contribuciones open source",
+        "Proyectos personales de automatización",
+        "Música y DJing"
+      ],
+      en: [
+        "Artistic lighting and creative technology",
+        "Participation in tech communities (Discord, forums)",
+        "Open source contributions",
+        "Personal automation projects",
+        "Music and DJing"
+      ]
     },
     education: [
       {
@@ -180,14 +232,14 @@ export default function Home() {
           title: "Desarrollador Full Stack",
           company: "Xinerlink",
           description: "Xinerlink (Remoto) | Ago 2021 - Actualidad",
-          content: `Participé en el desarrollo y mantenimiento de soluciones de gestión documental para áreas de RRHH y clientes como Caja Los Andes. Me encargué de la integración de servicios en la nube (AWS Lambda, Amplify, DynamoDB, S3) y de la automatización de procesos relacionados con la gestión y migración de grandes volúmenes de documentos y datos. Realicé integraciones con Google Drive y colaboré en la optimización de la trazabilidad y seguridad de la información. Trabajé en equipos multidisciplinarios, aportando mejoras continuas y asegurando la calidad del software entregado.`,
+          content: `Participo en el desarrollo y soporte de aplicaciones para la gestión documental y automatización de procesos en RRHH, incluyendo el proyecto DOCS IA (plataforma inteligente con IA para extracción y búsqueda de documentos). He trabajado en la integración de servicios en la nube (AWS Lambda, Amplify, DynamoDB, S3), soporte de sistemas existentes y en proyectos de migración masiva de documentos y datos.`,
           technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Migración de documentos"]
         },
         en: {
           title: "Full Stack Developer",
           company: "Xinerlink",
           description: "Xinerlink (Remote) | Aug 2021 - Present",
-          content: `I participated in the development and maintenance of document management solutions for HR departments and clients such as Caja Los Andes. I was responsible for integrating cloud services (AWS Lambda, Amplify, DynamoDB, S3) and automating processes related to the management and migration of large volumes of documents and data. I implemented Google Drive integrations and contributed to optimizing traceability and information security. I worked in multidisciplinary teams, continuously improving and ensuring the quality of delivered software.`,
+          content: `I participate in the development and support of applications for document management and process automation in HR, including the DOCS IA project (an intelligent platform with AI for document extraction and search). I have worked on integrating cloud services (AWS Lambda, Amplify, DynamoDB, S3), supporting existing systems, and on large-scale document and data migration projects.`,
           technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Document migration"]
         }
       },
@@ -196,15 +248,15 @@ export default function Home() {
           title: "Desarrollador Full Stack (Freelance)",
           company: "USACH",
           description: "USACH (Remoto) | Ago 2023 - Ene 2024",
-          content: `Trabajé sobre un sistema existente en Laravel con Inertia y Vue.js, orientado a la trazabilidad documental. Me encargué de modificar el sistema, agregar nuevos módulos y funcionalidades, y adaptar el flujo de trabajo a los requerimientos de la universidad. Mi labor incluyó tanto el análisis del código heredado como la integración entre frontend y backend para asegurar la correcta trazabilidad de los documentos.`,
-          technologies: ["Laravel 10", "Inertia", "Vue 3"]
+          content: `<div><div class='font-semibold mb-1'>Sistema de trazabilidad documental</div><div class='mb-4'>Trabajé sobre un sistema existente en Laravel con Inertia y Vue.js, orientado a la trazabilidad documental. Me encargué de modificar el sistema, agregar nuevos módulos y funcionalidades, y adaptar el flujo de trabajo a los requerimientos de la universidad. Mi labor incluyó tanto el análisis del código heredado como la integración entre frontend y backend para asegurar la correcta trazabilidad de los documentos.</div><div class='font-semibold mb-1'>Plataforma de gestión de pagos a proveedores</div><div>Desarrollé una plataforma para revisar y gestionar pagos a proveedores, donde los usuarios podían realizar solicitudes y los responsables aprobar o rechazar pagos. Implementado en Laravel y jQuery, consultando bases de datos Oracle.</div></div>`,
+          technologies: ["Laravel 10", "Inertia", "Vue 3", "jQuery", "Oracle"]
         },
         en: {
           title: "Full Stack Developer (Freelance)",
           company: "USACH",
           description: "USACH (Remote) | Aug 2023 - Jan 2024",
-          content: `Worked on an existing Laravel system with Inertia and Vue.js, focused on document traceability. I was responsible for modifying the system, adding new modules and features, and adapting the workflow to the university's requirements. My work included analyzing legacy code and integrating frontend and backend to ensure proper document traceability.`,
-          technologies: ["Laravel 10", "Inertia", "Vue 3"]
+          content: `<div><div class='font-semibold mb-1'>Document traceability system</div><div class='mb-4'>Worked on an existing Laravel system with Inertia and Vue.js, focused on document traceability. Responsible for modifying the system, adding new modules and features, and adapting the workflow to the university's requirements. My work included analyzing legacy code and integrating frontend and backend to ensure proper document traceability.</div><div class='font-semibold mb-1'>Supplier payments management platform</div><div>Developed a platform for reviewing and managing supplier payments, allowing users to submit requests and managers to approve or reject payments. Built with Laravel and jQuery, querying Oracle databases.</div></div>`,
+          technologies: ["Laravel 10", "Inertia", "Vue 3", "jQuery", "Oracle"]
         }
       },
       {
@@ -407,11 +459,11 @@ export default function Home() {
               >
                 {language === "es" ? "Desarrollador Full Stack" : "Full Stack Developer"}
               </motion.h2>
-              <motion.p 
-                className="max-w-3xl mx-auto text-center text-muted-foreground mt-4 text-sm md:text-base"
+              <motion.p
+                className="max-w-2xl mx-auto text-center text-foreground font-medium mt-2 text-base md:text-lg"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
               >
                 {t.presentacionText[language]}
               </motion.p>
@@ -482,7 +534,11 @@ export default function Home() {
                     <CardDescription>{item[language].description}</CardDescription>
                   </CardHeader>
                   <CardContent className="text-muted-foreground text-sm">
-                    {item[language].content}
+                    {item[language].content.startsWith('<') ? (
+                      <span dangerouslySetInnerHTML={{ __html: item[language].content }} />
+                    ) : (
+                      item[language].content
+                    )}
                     <div className="mt-2 flex flex-wrap gap-2">
                       {item[language].technologies?.map((tech) => (
                         <Badge key={tech} variant="secondary">{tech}</Badge>
@@ -510,23 +566,42 @@ export default function Home() {
             <Code2 className="h-6 w-6 text-miku dark:text-mikuLight" />
             <h2 className="text-2xl font-semibold text-foreground">{t.habilidades[language]}</h2>
           </div>
-          <motion.div 
-            className="flex flex-wrap gap-2"
-            initial={animatedSection === 'habilidades' ? { opacity: 0 } : false}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, staggerChildren: 0.1 }}
-          >
-            {t.skills[language].map((skill, index) => (
-              <motion.div
-                key={skill}
-                initial={animatedSection === 'habilidades' ? { opacity: 0, scale: 0.8 } : false}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
-                <Badge className="hover:scale-105 transition-transform">{skill}</Badge>
-              </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(t.skillsByCategory[language]).map(([cat, skills]) => (
+              <div key={cat}>
+                <h3 className="font-semibold text-miku dark:text-mikuLight mb-2 text-base">{cat}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill) => (
+                    <Badge key={skill} className="hover:scale-105 transition-transform">{skill}</Badge>
+                  ))}
+                </div>
+              </div>
             ))}
-          </motion.div>
+          </div>
+        </motion.section>
+
+        {/* Sección de Proyectos Destacados */}
+        <motion.section
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-6 mb-16 scroll-mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-miku dark:text-mikuLight" />
+            <h2 className="text-2xl font-semibold text-foreground">{language === 'es' ? 'Proyectos Destacados' : 'Featured Projects'}</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {t.featuredProjects.map((proj) => (
+              <Card key={proj[language].title} className="hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <CardTitle>{proj[language].title}</CardTitle>
+                  <CardDescription>{proj[language].description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
         </motion.section>
 
         <motion.section
@@ -541,7 +616,6 @@ export default function Home() {
           onAnimationComplete={() => { if (animatedSection === 'hobbies') setAnimatedSection(null); }}
         >
           <h2 className="text-2xl font-semibold text-foreground">{t.hobbies[language]}</h2>
-          
           <Card className="hover:shadow-lg transition-shadow duration-300">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-6">
@@ -562,7 +636,6 @@ export default function Home() {
                     <Badge variant="secondary">WLED</Badge>
                   </div>
                 </div>
-
                 <div className="flex flex-wrap gap-2">
                   <Button variant="outline" size="sm" className="gap-2" asChild>
                     <a href="https://www.youtube.com/watch?v=cuT-VU4PR54&t=4630s" target="_blank" rel="noopener">
