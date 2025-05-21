@@ -46,7 +46,7 @@ export default function Home() {
     contacto: useRef<HTMLDivElement>(null),
   };
 
-  // Modificar el useEffect del IntersectionObserver
+  // Modificar el useEffect del IntersectionObserver para incluir 'refs' en el array de dependencias
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -56,7 +56,6 @@ export default function Home() {
             const currentRect = entry.target.getBoundingClientRect();
             const currentDistance = Math.abs(currentRect.top);
 
-            // Usamos la ref en lugar del estado directamente
             const currentActiveRect = refs[activeSectionRef.current as keyof typeof refs]?.current?.getBoundingClientRect();
             const currentActiveDistance = currentActiveRect ? Math.abs(currentActiveRect.top) : Infinity;
 
@@ -79,7 +78,7 @@ export default function Home() {
     });
 
     return () => observer.disconnect();
-  }, []); // Ya no necesitamos activeSection como dependencia
+  }, [refs]);
 
   const handleNavClick = (id: string) => {
     setActiveSection(id);
