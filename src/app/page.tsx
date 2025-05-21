@@ -6,9 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { 
-  Sun, Moon, Lightbulb, Zap, Video, Sparkles, 
+  Sun, Moon, Sparkles, 
   GraduationCap, Briefcase, Code2, Mail, Phone, 
-  Github, MessageCircle, ArrowRight
+  Github
 } from "lucide-react";
 
 const SECTIONS = [
