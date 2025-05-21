@@ -61,11 +61,15 @@ export default function Home() {
           if (entry.isIntersecting) {
             const currentSection = entry.target.id;
             const currentRect = entry.target.getBoundingClientRect();
-            const currentDistance = Math.abs(currentRect.top);
+            const viewportHeight = window.innerHeight;
+            const currentDistance = Math.abs(currentRect.top - viewportHeight / 2);
 
             const currentActiveRect = refs[activeSectionRef.current as keyof typeof refs]?.current?.getBoundingClientRect();
-            const currentActiveDistance = currentActiveRect ? Math.abs(currentActiveRect.top) : Infinity;
+            const currentActiveDistance = currentActiveRect 
+              ? Math.abs(currentActiveRect.top - viewportHeight / 2) 
+              : Infinity;
 
+            // Actualizar si la nueva sección está más cerca del centro de la pantalla
             if (currentDistance < currentActiveDistance) {
               setActiveSection(currentSection);
             }
@@ -73,11 +77,12 @@ export default function Home() {
         });
       },
       {
-        rootMargin: "-20% 0px -80% 0px",
-        threshold: [0, 0.25, 0.5, 0.75, 1]
+        rootMargin: "-40% 0px -40% 0px",
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
       }
     );
 
+    // Observar todas las secciones
     Object.values(refs).forEach((ref) => {
       if (ref.current) {
         observer.observe(ref.current);
@@ -106,62 +111,64 @@ export default function Home() {
     <>
       {/* Navbar fijo */}
       <nav className="fixed top-0 left-0 w-full z-20 bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border-b border-border flex justify-center shadow-sm transition-colors">
-        <ul className="flex gap-4 py-3 relative">
-          {/* Indicador deslizante */}
-          <motion.div 
-            className="absolute bottom-0 h-0.5 bg-miku dark:bg-mikuLight rounded-full"
-            initial={false}
-            animate={{
-              width: '80px',
-              x: SECTIONS.findIndex(s => s.id === activeSection) * (80 + 16),
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }}
-          />
-          {SECTIONS.map((section) => (
-            <li key={section.id} className="relative">
-              <button
-                onClick={() => handleNavClick(section.id)}
-                className={`px-4 py-1 rounded-full font-medium transition-colors duration-200 relative overflow-hidden
-                  ${activeSection === section.id ? "text-miku dark:text-mikuLight" : "text-muted-foreground hover:text-miku dark:hover:text-mikuLight"}
-                `}
-                tabIndex={0}
-              >
-                {activeSection === section.id && (
-                  <motion.span
-                    className="absolute inset-0 rounded-full bg-miku/20 dark:bg-mikuLight/20 z-0"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{section.label}</span>
-              </button>
-          </li>
-          ))}
-        </ul>
+        <div className="w-full max-w-7xl px-4">
+          <ul className="flex gap-2 md:gap-4 py-2 md:py-3 relative overflow-x-auto scrollbar-hide">
+            {/* Indicador deslizante */}
+            <motion.div 
+              className="absolute bottom-0 h-0.5 bg-miku dark:bg-mikuLight rounded-full"
+              initial={false}
+              animate={{
+                width: '60px',
+                x: SECTIONS.findIndex(s => s.id === activeSection) * (60 + 8),
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30
+              }}
+            />
+            {SECTIONS.map((section) => (
+              <li key={section.id} className="relative whitespace-nowrap">
+                <button
+                  onClick={() => handleNavClick(section.id)}
+                  className={`px-3 md:px-4 py-1 rounded-full font-medium transition-colors duration-200 relative overflow-hidden text-sm md:text-base
+                    ${activeSection === section.id ? "text-miku dark:text-mikuLight" : "text-muted-foreground hover:text-miku dark:hover:text-mikuLight"}
+                  `}
+                  tabIndex={0}
+                >
+                  {activeSection === section.id && (
+                    <motion.span
+                      className="absolute inset-0 rounded-full bg-miku/20 dark:bg-mikuLight/20 z-0"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{section.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
 
       {/* Botón flotante de cambio de tema */}
-      <div className="fixed top-4 right-4 z-30">
+      <div className="fixed top-2 right-2 md:top-4 md:right-4 z-30">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="h-9 w-9 rounded-full bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border border-border shadow-sm hover:bg-background/90 dark:hover:bg-[#181A1B]/90"
+          className="h-8 w-8 md:h-9 md:w-9 rounded-full bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border border-border shadow-sm hover:bg-background/90 dark:hover:bg-[#181A1B]/90"
         >
-          {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
+          {mounted && (theme === "dark" ? <Sun className="h-4 w-4 md:h-5 md:w-5" /> : <Moon className="h-4 w-4 md:h-5 md:w-5" />)}
         </Button>
       </div>
 
-      <main className="relative z-10 min-h-screen flex flex-col items-center bg-background px-4 pt-20">
+      <main className="relative z-10 min-h-screen flex flex-col items-center bg-background px-4 pt-16 md:pt-20">
         <motion.header
           ref={refs.presentacion}
-          className="flex flex-col items-center gap-4 mt-12 mb-8 scroll-mt-24"
+          className="flex flex-col items-center gap-4 mt-8 md:mt-12 mb-8 scroll-mt-24 w-full max-w-4xl"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'presentacion' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -169,11 +176,11 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           onAnimationComplete={() => { if (animatedSection === 'presentacion') setAnimatedSection(null); }}
         >
-          <div className="relative">
+          <div className="relative w-full">
             <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-miku to-mikuLight opacity-20 blur-lg"></div>
-            <div className="relative bg-background/80 backdrop-blur-sm p-8 rounded-lg border border-border">
+            <div className="relative bg-background/80 backdrop-blur-sm p-4 md:p-8 rounded-lg border border-border">
               <motion.h1 
-                className="text-4xl font-bold text-foreground text-center"
+                className="text-3xl md:text-4xl font-bold text-foreground text-center"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
@@ -181,7 +188,7 @@ export default function Home() {
                 Matias Guerrero
               </motion.h1>
               <motion.h2 
-                className="text-xl text-muted-foreground text-center mt-2"
+                className="text-lg md:text-xl text-muted-foreground text-center mt-2"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
@@ -189,7 +196,7 @@ export default function Home() {
                 Desarrollador Full Stack
               </motion.h2>
               <motion.p 
-                className="max-w-xl text-center text-muted-foreground mt-4"
+                className="max-w-3xl mx-auto text-center text-muted-foreground mt-4 text-sm md:text-base"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
@@ -201,11 +208,10 @@ export default function Home() {
         </motion.header>
 
         <motion.section
-          key={activeSection}
           ref={refs.formacion}
           id="formacion"
-          className="w-full max-w-2xl mt-12 flex flex-col gap-6 scroll-mt-24"
-          initial={{ opacity: 0, y: 20 }}
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-6 scroll-mt-32"
+          initial={{ opacity: 0, y: 10 }}
           animate={animatedSection === 'formacion' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -251,7 +257,7 @@ export default function Home() {
         <motion.section
           ref={refs.experiencia}
           id="experiencia"
-          className="w-full max-w-2xl mt-12 flex flex-col gap-6 scroll-mt-24"
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-6 scroll-mt-24"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'experiencia' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -269,42 +275,42 @@ export default function Home() {
                 title: "Desarrollador Full Stack",
                 company: "Xinerlink",
                 description: "Xinerlink (Remoto) | Ago 2021 - Actualidad",
-                content: `Desarrollo y mantenimiento de software en proyectos de gestión documental en áreas de RRHH y para clientes como Caja Los Andes. Trabajo con AWS Lambda, Amplify, DynamoDB, S3, integraciones con Google Drive y migraciones de millones de documentos.`,
+                content: `Participé en el desarrollo y mantenimiento de soluciones de gestión documental para áreas de RRHH y clientes como Caja Los Andes. Me encargué de la integración de servicios en la nube (AWS Lambda, Amplify, DynamoDB, S3) y de la automatización de procesos relacionados con la gestión y migración de grandes volúmenes de documentos y datos. Realicé integraciones con Google Drive y colaboré en la optimización de la trazabilidad y seguridad de la información. Trabajé en equipos multidisciplinarios, aportando mejoras continuas y asegurando la calidad del software entregado.`,
                 technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Migración de documentos"]
               },
               {
                 title: "Desarrollador Full Stack (Freelance)",
                 company: "USACH",
                 description: "USACH (Remoto) | Ago 2023 - Ene 2024",
-                content: "Proyecto de Sistema trazabilidad documental (STD2). Creación de nuevos módulos, mejoras y nuevas funcionalidades.",
+                content: `Trabajé sobre un sistema existente en Laravel con Inertia y Vue.js, orientado a la trazabilidad documental. Me encargué de modificar el sistema, agregar nuevos módulos y funcionalidades, y adaptar el flujo de trabajo a los requerimientos de la universidad. Mi labor incluyó tanto el análisis del código heredado como la integración entre frontend y backend para asegurar la correcta trazabilidad de los documentos.`,
                 technologies: ["Laravel 10", "Inertia", "Vue 3"]
               },
               {
                 title: "Desarrollador Full Stack",
                 company: "Lirmi",
                 description: "Lirmi (Remoto) | Abr 2021 - Ago 2021",
-                content: "Desarrollo de software de gestión curricular con enfoque en planificación, evaluación y libro de clases digital.",
+                content: `Desarrollé y mejoré módulos de un sistema de gestión curricular enfocado en planificación, evaluación y libro de clases digital. Me encargué de implementar nuevas funcionalidades, optimizar módulos existentes y adaptar el sistema a las necesidades de los usuarios. Trabajé con VueJS, Laravel, Bulma y PostgreSQL, colaborando con el equipo para asegurar una experiencia educativa digital robusta y eficiente.`,
                 technologies: ["VueJS", "Laravel", "Bulma", "PostgreSQL"]
               },
               {
                 title: "Analista Programador",
                 company: "Xinerlink",
                 description: "Xinerlink, Santiago | Nov 2018 - Abr 2021",
-                content: `Proponer soluciones innovadoras, crear maquetas, desarrollar backend y frontend, asegurar integración con otros sistemas.`,
+                content: `En esta etapa inicial en Xinerlink, me enfoqué en el desarrollo de aplicaciones web utilizando principalmente PHP puro y jQuery, conectando con procedimientos almacenados (SP) en colaboración con un DBA. Mi trabajo se centró en el frontend, empleando Bootstrap y AdminLTE para crear interfaces intuitivas y funcionales. El principal desafío fue extraer y mostrar datos del gestor documental OnBase en sistemas web personalizados, facilitando el acceso y la gestión de información para los usuarios internos.`,
                 technologies: ["PHP POO", "jQuery", "SQL Server", "Transact-SQL", "Highchart", "AdminLTE"]
               },
               {
                 title: "Programador",
                 company: "Ventas Técnicas",
                 description: "Ventas Técnicas, Santiago | Jun 2018 - Nov 2018",
-                content: "Generación de informes KPI con Transact-SQL, desarrollo de interfaces de datos, mantenimiento de portal de indicadores con Highchart.",
+                content: `Me encargué del mantenimiento y evolución de un sistema que permitía a los clientes revisar métricas de call center y el desempeño de sus campañas. Realicé modificaciones en procedimientos almacenados (SP) y desarrollé interfaces de datos para clientes, así como la automatización de correos para campañas de empresas como WOM y Claro. Además, mantuve y mejoré el portal de indicadores utilizando Highchart, asegurando la disponibilidad y claridad de la información para la toma de decisiones.`,
                 technologies: ["Transact-SQL", "C#", "Highchart", "PHP", "Visual Studio", ".NET"]
               },
               {
                 title: "Práctica Analista Programador",
                 company: "Rheem Chile",
                 description: "Rheem Chile, Estación Central | Feb 2018 - Mar 2018",
-                content: `Desarrollo de sistema para mantención industrial desde cero: levantamiento de requerimientos, modelado y desarrollo completo. Tecnologías usadas: PHP7 (POO), MySQL, AdminLTE, Bootstrap y jQuery.`,
+                content: `Desarrollé desde cero un sistema para la gestión de mantención industrial, realizando el levantamiento de requerimientos, modelado y desarrollo completo de la aplicación. El sistema fue diseñado para el departamento de mantenimiento, permitiendo registrar y gestionar actividades y tareas. Realicé pruebas en red local y utilicé PHP7 (POO), MySQL, AdminLTE, Bootstrap y jQuery para crear una solución robusta y adaptable a las necesidades del área.`,
                 technologies: ["PHP7 (POO)", "MySQL", "AdminLTE", "Bootstrap", "jQuery"]
               }
             ].map((item, index) => (
@@ -330,13 +336,13 @@ export default function Home() {
                 </Card>
               </motion.div>
             ))}
-        </div>
+          </div>
         </motion.section>
 
         <motion.section
           ref={refs.habilidades}
           id="habilidades"
-          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-16 scroll-mt-24"
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-4 mb-16 scroll-mt-24"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'habilidades' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -373,7 +379,7 @@ export default function Home() {
         <motion.section
           ref={refs.hobbies}
           id="hobbies"
-          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'hobbies' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -435,7 +441,7 @@ export default function Home() {
         <motion.section
           ref={refs.contacto}
           id="contacto"
-          className="w-full max-w-2xl mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
+          className="w-full max-w-4xl mt-8 md:mt-12 flex flex-col gap-4 mb-24 scroll-mt-24"
           initial={{ opacity: 0, y: 20 }}
           animate={animatedSection === 'contacto' ? { opacity: 1, y: 0 } : {}}
           whileInView={{ opacity: 1, y: 0 }}
@@ -467,7 +473,7 @@ export default function Home() {
                   <a href="https://www.linkedin.com/in/matiasguerreron/" target="_blank" rel="noopener" className="text-muted-foreground hover:text-primary transition-colors">LinkedIn</a>
                 </div>
               </div>
-              <div className="mt-6 flex gap-4">
+              <div className="mt-6 flex flex-col sm:flex-row gap-4">
                 <Button asChild className="group">
                   <a href="mailto:matiasguerrero.n@hotmail.com">
                     Enviar email
