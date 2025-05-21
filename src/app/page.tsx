@@ -1,16 +1,14 @@
 "use client";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { 
   Sun, Moon, Lightbulb, Zap, Video, Sparkles, 
   GraduationCap, Briefcase, Code2, Mail, Phone, 
-  Github, Twitter, MessageCircle, ArrowRight
+  Github, MessageCircle, ArrowRight
 } from "lucide-react";
 
 const SECTIONS = [
@@ -27,7 +25,6 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("presentacion");
   const activeSectionRef = useRef(activeSection);
-  const [lastNavClick, setLastNavClick] = useState<string | null>(null);
 
   // Estado para animación de entrada de sección
   const [animatedSection, setAnimatedSection] = useState<string | null>("presentacion");
@@ -198,7 +195,7 @@ export default function Home() {
         </motion.header>
 
         <motion.section
-          key={lastNavClick === 'formacion' ? Date.now() : 'formacion'}
+          key={activeSection}
           ref={refs.formacion}
           id="formacion"
           className="w-full max-w-2xl mt-12 flex flex-col gap-6 scroll-mt-24"
@@ -477,7 +474,7 @@ export default function Home() {
                     Hablar por WhatsApp
                   </a>
                 </Button>
-    </div>
+              </div>
             </CardContent>
           </Card>
         </motion.section>
