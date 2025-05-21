@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   Sun, Moon, Lightbulb, Zap, Video, Sparkles, 
@@ -36,14 +36,21 @@ export default function Home() {
 
   useEffect(() => { setMounted(true); }, []);
 
-  // refs para scroll suave
+  // Declarar cada ref individualmente
+  const presentacionRef = useRef<HTMLDivElement>(null);
+  const formacionRef = useRef<HTMLDivElement>(null);
+  const experienciaRef = useRef<HTMLDivElement>(null);
+  const habilidadesRef = useRef<HTMLDivElement>(null);
+  const hobbiesRef = useRef<HTMLDivElement>(null);
+  const contactoRef = useRef<HTMLDivElement>(null);
+
   const refs = {
-    presentacion: useRef<HTMLDivElement>(null),
-    formacion: useRef<HTMLDivElement>(null),
-    experiencia: useRef<HTMLDivElement>(null),
-    habilidades: useRef<HTMLDivElement>(null),
-    hobbies: useRef<HTMLDivElement>(null),
-    contacto: useRef<HTMLDivElement>(null),
+    presentacion: presentacionRef,
+    formacion: formacionRef,
+    experiencia: experienciaRef,
+    habilidades: habilidadesRef,
+    hobbies: hobbiesRef,
+    contacto: contactoRef,
   };
 
   // Modificar el useEffect del IntersectionObserver para incluir 'refs' en el array de dependencias
