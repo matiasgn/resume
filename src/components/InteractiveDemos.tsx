@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Demo {
   title: string;
@@ -58,12 +60,41 @@ const demos: Demo[] = [
 ];
 
 export function InteractiveDemos() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const scrollAmount = clientWidth * 0.8;
+      scrollRef.current.scrollTo({
+        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
     <section className="py-12">
-      <div className="px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+      <div className="px-4 relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex"
+          onClick={() => scroll("left")}
+          aria-label="Anterior"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </Button>
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth pb-4 md:pb-0 snap-x snap-mandatory"
+          style={{ scrollBehavior: "smooth" }}
+        >
           {demos.map((demo, index) => (
-            <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+            <Card
+              key={index}
+              className="min-w-[320px] max-w-xs md:min-w-[380px] md:max-w-sm flex-shrink-0 snap-center overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col"
+            >
               <div className="relative h-48 w-full">
                 <Image
                   src={demo.imageUrl}
@@ -106,6 +137,15 @@ export function InteractiveDemos() {
             </Card>
           ))}
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex"
+          onClick={() => scroll("right")}
+          aria-label="Siguiente"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </Button>
       </div>
     </section>
   );
