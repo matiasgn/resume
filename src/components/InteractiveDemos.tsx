@@ -67,10 +67,14 @@ export function InteractiveDemos() {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.8;
-      let newScroll = direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
-      // Loop infinito
-      if (newScroll + clientWidth >= scrollWidth) newScroll = 0;
-      if (newScroll < 0) newScroll = scrollWidth - clientWidth;
+      let newScroll;
+      if (direction === "right") {
+        newScroll = scrollLeft + scrollAmount;
+        if (newScroll + clientWidth > scrollWidth) newScroll = 0;
+      } else {
+        newScroll = scrollLeft - scrollAmount;
+        if (newScroll < 0) newScroll = scrollWidth - clientWidth;
+      }
       scrollRef.current.scrollTo({
         left: newScroll,
         behavior: "smooth"
