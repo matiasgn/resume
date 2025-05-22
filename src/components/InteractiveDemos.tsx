@@ -39,6 +39,21 @@ const demos: Demo[] = [
       "Interfaz moderna y responsiva"
     ],
     imageUrl: "/demos/marcacion-preview.png"
+  },
+  {
+    title: "Sistema de Monitoreo de Fatiga",
+    description: "Sistema web para la gestión y monitoreo de la fatiga laboral en trabajadores. Permite registrar, visualizar y analizar alertas de fatiga, así como administrar la información de los empleados y generar reportes automáticos.",
+    technologies: ["Laravel", "Inertia.js", "React", "TailwindCSS"],
+    demoUrl: "https://sistema-monitoreo-fatiga-app.fly.dev/",
+    features: [
+      "Registro y gestión de trabajadores",
+      "Monitoreo en tiempo real de alertas de fatiga",
+      "Dashboard administrativo con métricas clave",
+      "Generación de reportes automáticos",
+      "Interfaz moderna, responsiva y modo oscuro",
+      "Autenticación y control de sesiones"
+    ],
+    imageUrl: "/demos/monitor-fatiga-preview.png"
   }
 ];
 
