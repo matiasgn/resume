@@ -46,7 +46,7 @@ const demos: Demo[] = [
     title: "Sistema de Monitoreo de Fatiga",
     description: "Sistema web para la gestión y monitoreo de la fatiga laboral en trabajadores. Permite registrar, visualizar y analizar alertas de fatiga, así como administrar la información de los empleados y generar reportes automáticos.",
     technologies: ["Laravel", "Inertia.js", "React", "TailwindCSS"],
-    demoUrl: "https://sistema-monitoreo-fatiga-app.fly.dev/",
+    demoUrl: "https://sistema-monitoreo-fatiga-app.fly.dev/login",
     features: [
       "Registro y gestión de trabajadores",
       "Monitoreo en tiempo real de alertas de fatiga",
