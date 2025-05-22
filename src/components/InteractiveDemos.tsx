@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Demo {
@@ -61,21 +61,36 @@ const demos: Demo[] = [
 
 export function InteractiveDemos() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
+      const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.8;
+      let newScroll = direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
+      // Loop infinito
+      if (newScroll + clientWidth >= scrollWidth) newScroll = 0;
+      if (newScroll < 0) newScroll = scrollWidth - clientWidth;
       scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        left: newScroll,
         behavior: "smooth"
       });
     }
   };
 
+  // Autoplay
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      scroll("right");
+    }, 4000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
   return (
     <section className="py-12">
-      <div className="px-4 relative">
+      <div className="relative mx-auto" style={{maxWidth: '90vw'}}>
         <Button
           variant="ghost"
           size="icon"
