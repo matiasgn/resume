@@ -680,7 +680,7 @@ export default function Home() {
               <div className="grid gap-4">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <a href="mailto:matiasguerrero.n@hotmail.com" className="text-muted-foreground hover:text-primary transition-colors">{t.email[language]}</a>
+                  <a href="mailto:matiasguerrero.dev@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">{t.email[language]}</a>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-muted-foreground" />
@@ -697,7 +697,7 @@ export default function Home() {
               </div>
               <div className="mt-6 flex flex-col sm:flex-row gap-4">
                 <Button asChild className="group">
-                  <a href="mailto:matiasguerrero.n@hotmail.com">{t.sendEmail[language]}</a>
+                  <a href="mailto:matiasguerrero.dev@gmail.com">{t.sendEmail[language]}</a>
                 </Button>
                 <Button asChild variant="outline" className="bg-[#25D366] hover:bg-[#25D366]/90 text-white border-none group">
                   <a href="https://wa.me/56953466236" target="_blank" rel="noopener">{t.whatsapp[language]}</a>
