@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Demo {
@@ -61,7 +61,6 @@ const demos: Demo[] = [
 
 export function InteractiveDemos() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -69,11 +68,9 @@ export function InteractiveDemos() {
       const scrollAmount = clientWidth * 0.8;
       let newScroll;
       if (direction === "right") {
-        newScroll = scrollLeft + scrollAmount;
-        if (newScroll + clientWidth > scrollWidth) newScroll = 0;
+        newScroll = Math.min(scrollLeft + scrollAmount, scrollWidth - clientWidth);
       } else {
-        newScroll = scrollLeft - scrollAmount;
-        if (newScroll < 0) newScroll = scrollWidth - clientWidth;
+        newScroll = Math.max(scrollLeft - scrollAmount, 0);
       }
       scrollRef.current.scrollTo({
         left: newScroll,
@@ -82,23 +79,14 @@ export function InteractiveDemos() {
     }
   };
 
-  // Autoplay
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      scroll("right");
-    }, 4000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
   return (
     <section className="py-12">
       <div className="relative mx-auto" style={{maxWidth: '90vw'}}>
         <Button
           variant="ghost"
           size="icon"
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex"
+          className="absolute left-0 top-1/2 z-10 hidden md:flex opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-200"
+          style={{ transform: 'translateY(-50%)' }}
           onClick={() => scroll("left")}
           aria-label="Anterior"
         >
@@ -159,7 +147,8 @@ export function InteractiveDemos() {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex"
+          className="absolute right-0 top-1/2 z-10 hidden md:flex opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-200"
+          style={{ transform: 'translateY(-50%)' }}
           onClick={() => scroll("right")}
           aria-label="Siguiente"
         >
