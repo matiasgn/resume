@@ -135,3 +135,15 @@
 .animate-pulse-neon-dark {
   animation: pulse-neon-dark 2.5s infinite ease-in-out;
 }
+
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* The h-[3em] or similar fixed height for the description container 
+     should be handled directly in InteractiveDemos.tsx via Tailwind classes,
+     as reported by the previous subtask, to ensure the container itself
+     has a consistent height before the 'View More' button. */
+}

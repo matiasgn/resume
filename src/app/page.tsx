@@ -31,6 +31,16 @@ const originalDemosData = [
   }
 ];
 
+// Define SectionKey type based on SECTIONS ids
+type SectionKey = 
+  | 'presentacion' 
+  | 'formacion' 
+  | 'experiencia' 
+  | 'habilidades' 
+  | 'maquetas' 
+  | 'hobbies' 
+  | 'contacto';
+
 const SECTIONS = [
   { id: "presentacion", label: "Presentación" },
   { id: "formacion", label: "Formación" },
@@ -167,6 +177,8 @@ export default function Home() {
     viewDemoButtonText: Record<'es' | 'en', string>;
     previousButtonAriaLabel: Record<'es' | 'en', string>;
     nextButtonAriaLabel: Record<'es' | 'en', string>;
+    viewMoreText: Record<'es' | 'en', string>;
+    closeButtonText: Record<'es' | 'en', string>;
   } = {
     presentacion: {
       es: "Presentación",
@@ -481,6 +493,14 @@ export default function Home() {
     nextButtonAriaLabel: {
       es: "Siguiente",
       en: "Next"
+    },
+    viewMoreText: {
+      es: "Ver Más",
+      en: "View More"
+    },
+    closeButtonText: {
+      es: "Cerrar",
+      en: "Close"
     }
   };
 
@@ -535,7 +555,7 @@ export default function Home() {
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-10">{section.label}</span>
+                  <span className="relative z-10">{t[section.id as SectionKey][language]}</span>
                 </button>
               </li>
             ))}
@@ -729,6 +749,8 @@ export default function Home() {
               viewDemoButtonText={t.viewDemoButtonText[language]}
               previousButtonAriaLabel={t.previousButtonAriaLabel[language]}
               nextButtonAriaLabel={t.nextButtonAriaLabel[language]}
+              viewMoreText={t.viewMoreText[language]}
+              closeButtonText={t.closeButtonText[language]}
             />
           </div>
         </section>
