@@ -167,6 +167,8 @@ export default function Home() {
     viewDemoButtonText: Record<'es' | 'en', string>;
     previousButtonAriaLabel: Record<'es' | 'en', string>;
     nextButtonAriaLabel: Record<'es' | 'en', string>;
+    viewMoreText: Record<'es' | 'en', string>;
+    closeButtonText: Record<'es' | 'en', string>;
   } = {
     presentacion: {
       es: "Presentación",
@@ -481,6 +483,14 @@ export default function Home() {
     nextButtonAriaLabel: {
       es: "Siguiente",
       en: "Next"
+    },
+    viewMoreText: {
+      es: "Ver Más",
+      en: "View More"
+    },
+    closeButtonText: {
+      es: "Cerrar",
+      en: "Close"
     }
   };
 
@@ -729,6 +739,8 @@ export default function Home() {
               viewDemoButtonText={t.viewDemoButtonText[language]}
               previousButtonAriaLabel={t.previousButtonAriaLabel[language]}
               nextButtonAriaLabel={t.nextButtonAriaLabel[language]}
+              viewMoreText={t.viewMoreText[language]}
+              closeButtonText={t.closeButtonText[language]}
             />
           </div>
         </section>

@@ -2,8 +2,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react"; // Added useState
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  // DialogTrigger, // Not strictly needed as we control open state manually
+  // DialogClose, // Can be part of DialogFooter if needed, or manual close
+} from "@/components/ui/dialog";
 
 interface DemoDataItem {
   title: string;
@@ -20,10 +30,19 @@ interface InteractiveDemosProps {
   viewDemoButtonText: string;
   previousButtonAriaLabel: string;
   nextButtonAriaLabel: string;
+  viewMoreText: string; // New
+  closeButtonText: string; // New
 }
 
-export function InteractiveDemos({ demos, viewDemoButtonText, previousButtonAriaLabel, nextButtonAriaLabel }: InteractiveDemosProps) {
+export function InteractiveDemos({ demos, viewDemoButtonText, previousButtonAriaLabel, nextButtonAriaLabel, viewMoreText, closeButtonText }: InteractiveDemosProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDemo, setSelectedDemo] = useState<DemoDataItem | null>(null);
+
+  const handleViewMoreClick = (demo: DemoDataItem) => {
+    setSelectedDemo(demo);
+    setIsModalOpen(true);
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -76,7 +95,8 @@ export function InteractiveDemos({ demos, viewDemoButtonText, previousButtonAria
               <div className="flex flex-col flex-1">
                 <CardHeader>
                   <CardTitle>{demo.title}</CardTitle>
-                  <CardDescription className="mb-2">{demo.description}</CardDescription>
+                  {/* Added truncate-2-lines class. Note: This class needs to be defined in globals.css */}
+                  <CardDescription className="mb-2 truncate-2-lines h-[3em]">{demo.description}</CardDescription>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {demo.technologies.map((tech, i) => (
                       <Badge key={i} variant="secondary">
@@ -86,19 +106,25 @@ export function InteractiveDemos({ demos, viewDemoButtonText, previousButtonAria
                   </div>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col">
-                  <ul className="list-disc list-inside space-y-2 mb-4 overflow-y-auto">
-                    {demo.features.map((feature, i) => (
-                      <li key={i} className="text-sm text-muted-foreground">
+                  <ul className="list-disc list-inside space-y-1 mb-3 text-sm text-muted-foreground">
+                    {demo.features.slice(0, 2).map((feature, i) => (
+                      <li key={i} className="truncate"> {/* Simple truncate for single line */}
                         {feature}
                       </li>
                     ))}
+                    {demo.features.length > 2 && (
+                       <li className="text-xs text-muted-foreground/80">...and more.</li>
+                    )}
                   </ul>
                   <div className="mt-auto">
-                    <CardFooter className="p-0 pt-2">
-                      <Button asChild className="w-full">
+                    <CardFooter className="p-0 pt-2 flex flex-col sm:flex-row gap-2 items-stretch">
+                      <Button asChild className="w-full sm:w-auto flex-grow">
                         <a href={demo.demoUrl} target="_blank" rel="noopener noreferrer">
                           {viewDemoButtonText}
                         </a>
+                      </Button>
+                      <Button variant="outline" className="w-full sm:w-auto flex-grow" onClick={() => handleViewMoreClick(demo)}>
+                        {viewMoreText}
                       </Button>
                     </CardFooter>
                   </div>
@@ -118,6 +144,46 @@ export function InteractiveDemos({ demos, viewDemoButtonText, previousButtonAria
           <ChevronRight className="h-6 w-6" />
         </Button>
       </div>
+
+      {selectedDemo && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>{selectedDemo.title}</DialogTitle>
+            </DialogHeader>
+            <div className="py-4 space-y-4 max-h-[70vh] overflow-y-auto">
+              {/* Using DialogDescription for semantic correctness, though not strictly necessary for styling */}
+              <DialogDescription asChild> 
+                <p className="text-sm text-muted-foreground">{selectedDemo.description}</p>
+              </DialogDescription>
+              <div>
+                <h4 className="font-semibold mb-2 text-foreground">Features:</h4> {/* Consider if "Features" needs translation */}
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                  {selectedDemo.features.map((feature, i) => (
+                    <li key={i}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-foreground">Technologies:</h4> {/* Consider if "Technologies" needs translation */}
+                <div className="flex flex-wrap gap-2">
+                  {selectedDemo.technologies.map((tech, i) => (
+                    <Badge key={i} variant="secondary">{tech}</Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="sm:justify-between gap-2 flex-col-reverse sm:flex-row">
+              <Button variant="outline" asChild>
+                <a href={selectedDemo.demoUrl} target="_blank" rel="noopener noreferrer">
+                  {viewDemoButtonText} {/* Use the existing prop for this */}
+                </a>
+              </Button>
+              <Button onClick={() => setIsModalOpen(false)}>{closeButtonText}</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   );
-} 
+}
