@@ -12,6 +12,25 @@ import {
   Github, Monitor
 } from "lucide-react";
 
+// Define originalDemosData outside the component as it's constant
+const originalDemosData = [
+  {
+    technologies: ["Next.js", "TypeScript", "TailwindCSS", "JSON Server"],
+    demoUrl: "https://sistema-viaticos.vercel.app/",
+    imageUrl: "/demos/viaticos-preview.png"
+  },
+  {
+    technologies: ["Laravel", "Inertia.js", "React", "TailwindCSS"],
+    demoUrl: "https://control-asistencia-4o5o.onrender.com/",
+    imageUrl: "/demos/marcacion-preview.png"
+  },
+  {
+    technologies: ["Laravel", "Inertia.js", "React", "TailwindCSS"],
+    demoUrl: "https://sistema-monitoreo-fatiga-app.fly.dev/login",
+    imageUrl: "/demos/monitor-fatiga-preview.png"
+  }
+];
+
 const SECTIONS = [
   { id: "presentacion", label: "Presentación" },
   { id: "formacion", label: "Formación" },
@@ -140,6 +159,14 @@ export default function Home() {
     linkedin: Record<'es' | 'en', string>;
     sendEmail: Record<'es' | 'en', string>;
     whatsapp: Record<'es' | 'en', string>;
+    interactiveDemos: Array<Record<'es' | 'en', {
+      title: string;
+      description: string;
+      features: string[];
+    }>>;
+    viewDemoButtonText: Record<'es' | 'en', string>;
+    previousButtonAriaLabel: Record<'es' | 'en', string>;
+    nextButtonAriaLabel: Record<'es' | 'en', string>;
   } = {
     presentacion: {
       es: "Presentación",
@@ -369,7 +396,106 @@ export default function Home() {
       es: "Instagram",
       en: "Instagram"
     },
+    interactiveDemos: [
+      {
+        es: {
+          title: "Sistema de Viáticos",
+          description: "Sistema de gestión y control de viáticos empresariales, permitiendo el registro, aprobación y seguimiento de gastos.",
+          features: [
+            "Registro de viáticos",
+            "Aprobación de gastos",
+            "Dashboard de seguimiento",
+            "Reportes y estadísticas"
+          ]
+        },
+        en: {
+          title: "Expense Report System",
+          description: "Business expense management and control system, allowing the recording, approval, and tracking of expenses.",
+          features: [
+            "Expense report registration",
+            "Expense approval",
+            "Tracking dashboard",
+            "Reports and statistics"
+          ]
+        }
+      },
+      {
+        es: {
+          title: "Sistema de Marcación",
+          description: "Sistema de control de asistencia que permite registrar las entradas y salidas del personal, con funcionalidades de reportes y validaciones automáticas. El sistema está orientado a la gestión eficiente de recursos humanos en empresas y organizaciones.",
+          features: [
+            "Registro de entradas y salidas de empleados",
+            "Validación automática de horarios",
+            "Generación de reportes de asistencia",
+            "Dashboard administrativo con métricas clave",
+            "Interfaz moderna y responsiva"
+          ]
+        },
+        en: {
+          title: "Time Clock System",
+          description: "Attendance control system that allows recording employee clock-ins and clock-outs, with reporting functionalities and automatic validations. The system is aimed at efficient human resources management in companies and organizations.",
+          features: [
+            "Employee clock-in/out registration",
+            "Automatic schedule validation",
+            "Attendance report generation",
+            "Admin dashboard with key metrics",
+            "Modern and responsive interface"
+          ]
+        }
+      },
+      {
+        es: {
+          title: "Sistema de Monitoreo de Fatiga",
+          description: "Sistema web para la gestión y monitoreo de la fatiga laboral en trabajadores. Permite registrar, visualizar y analizar alertas de fatiga, así como administrar la información de los empleados y generar reportes automáticos.",
+          features: [
+            "Registro y gestión de trabajadores",
+            "Monitoreo en tiempo real de alertas de fatiga",
+            "Dashboard administrativo con métricas clave",
+            "Generación de reportes automáticos",
+            "Interfaz moderna, responsiva y modo oscuro",
+            "Autenticación y control de sesiones"
+          ]
+        },
+        en: {
+          title: "Fatigue Monitoring System",
+          description: "Web system for managing and monitoring occupational fatigue in workers. It allows recording, visualizing, and analyzing fatigue alerts, as well as managing employee information and generating automatic reports.",
+          features: [
+            "Worker registration and management",
+            "Real-time monitoring of fatigue alerts",
+            "Admin dashboard with key metrics",
+            "Automatic report generation",
+            "Modern, responsive interface with dark mode",
+            "Authentication and session control"
+          ]
+        }
+      }
+    ],
+    viewDemoButtonText: {
+      es: "Ver Demo",
+      en: "View Demo"
+    },
+    previousButtonAriaLabel: {
+      es: "Anterior",
+      en: "Previous"
+    },
+    nextButtonAriaLabel: {
+      es: "Siguiente",
+      en: "Next"
+    }
   };
+
+  // Prepare props for InteractiveDemos
+  const demosPropData = t.interactiveDemos.map((translatedDemo, index) => {
+    const originalDemo = originalDemosData[index]; // Assumes arrays are in the same order
+    return {
+      title: translatedDemo[language].title,
+      description: translatedDemo[language].description,
+      features: translatedDemo[language].features,
+      technologies: originalDemo.technologies,
+      demoUrl: originalDemo.demoUrl,
+      imageUrl: originalDemo.imageUrl,
+    };
+  });
 
   return (
     <>
@@ -598,7 +724,12 @@ export default function Home() {
                 {t.maquetas[language]}
               </h2>
             </div>
-            <InteractiveDemos />
+            <InteractiveDemos
+              demos={demosPropData}
+              viewDemoButtonText={t.viewDemoButtonText[language]}
+              previousButtonAriaLabel={t.previousButtonAriaLabel[language]}
+              nextButtonAriaLabel={t.nextButtonAriaLabel[language]}
+            />
           </div>
         </section>
 
