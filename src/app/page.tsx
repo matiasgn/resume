@@ -31,6 +31,16 @@ const originalDemosData = [
   }
 ];
 
+// Define SectionKey type based on SECTIONS ids
+type SectionKey = 
+  | 'presentacion' 
+  | 'formacion' 
+  | 'experiencia' 
+  | 'habilidades' 
+  | 'maquetas' 
+  | 'hobbies' 
+  | 'contacto';
+
 const SECTIONS = [
   { id: "presentacion", label: "Presentación" },
   { id: "formacion", label: "Formación" },
@@ -545,7 +555,7 @@ export default function Home() {
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-10">{section.label}</span>
+                  <span className="relative z-10">{t[section.id as SectionKey][language]}</span>
                 </button>
               </li>
             ))}
