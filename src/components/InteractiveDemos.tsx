@@ -122,7 +122,7 @@ export function InteractiveDemos() {
                     ))}
                   </div>
                 </CardHeader>
-                <CardContent className="flex-1 flex flex-col h-64">
+                <CardContent className="flex-1 flex flex-col">
                   <ul className="list-disc list-inside space-y-2 mb-4 overflow-y-auto">
                     {demo.features.map((feature, i) => (
                       <li key={i} className="text-sm text-muted-foreground">
