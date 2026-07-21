@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-[#f8fafc] to-[#e0f7fa] dark:from-[#181A1B] dark:to-[#23272f]`}>
+      <body className={`${outfit.variable} ${jetbrainsMono.variable} font-sans antialiased bg-gradient-to-br from-[#f8fafc] to-[#e0f7fa] dark:from-[#181A1B] dark:to-[#23272f]`}>
         {/* Líneas LED neón animadas en el fondo */}
         <div className="pointer-events-none fixed inset-0 z-0">
           {/* Línea horizontal superior */}

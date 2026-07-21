@@ -611,7 +611,7 @@ export default function Home() {
         >
           <div className="relative w-full">
             <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-miku to-mikuLight opacity-20 blur-lg"></div>
-            <div className="relative bg-background/80 backdrop-blur-sm p-4 md:p-8 rounded-lg border border-border">
+            <div className="relative bg-background/60 dark:bg-[#181a1b]/60 backdrop-blur-xl p-6 md:p-10 rounded-2xl border border-border/50 shadow-2xl">
               <motion.h1 
                 className="text-3xl md:text-4xl font-bold text-foreground text-center"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
@@ -636,6 +636,20 @@ export default function Home() {
               >
                 {t.presentacionText[language]}
               </motion.p>
+              
+              <motion.div 
+                className="flex justify-center mt-8"
+                initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <Button asChild className="gap-2 bg-miku hover:bg-miku/90 text-white dark:bg-mikuLight dark:text-black font-semibold rounded-full px-6 py-6 shadow-lg hover:shadow-miku/50 transition-all">
+                  <a href="/Matias_Guerrero_CV.pdf" download="Matias_Guerrero_CV.pdf">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    Descargar CV PDF
+                  </a>
+                </Button>
+              </motion.div>
             </div>
           </div>
         </motion.header>
@@ -663,7 +677,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+                <Card className="bg-background/40 dark:bg-[#181a1b]/40 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl hover:shadow-miku/10 dark:hover:shadow-mikuLight/10 transition-all duration-300 hover:translate-y-[-2px]">
                   <CardHeader>
                     <CardTitle>{item[language].title}</CardTitle>
                     <CardDescription>{item[language].description}</CardDescription>
@@ -710,7 +724,7 @@ export default function Home() {
                     )}
                     <div className="mt-2 flex flex-wrap gap-2">
                       {item[language].technologies?.map((tech) => (
-                        <Badge key={tech} variant="secondary">{tech}</Badge>
+                        <Badge key={tech} variant="secondary" className="hover:bg-miku/10 hover:text-miku dark:hover:bg-mikuLight/10 dark:hover:text-mikuLight transition-colors cursor-default">{tech}</Badge>
                       ))}
                     </div>
                   </CardContent>
@@ -736,7 +750,7 @@ export default function Home() {
                   <h3 className="font-semibold text-miku dark:text-mikuLight mb-2 text-base">{cat}</h3>
                   <div className="flex flex-wrap gap-2">
                     {skills.map((skill) => (
-                      <Badge key={skill} className="hover:scale-105 transition-transform">{skill}</Badge>
+                      <Badge key={skill} className="hover:scale-105 hover:bg-miku/90 dark:hover:bg-mikuLight/90 transition-all">{skill}</Badge>
                     ))}
                   </div>
                 </div>
@@ -785,7 +799,7 @@ export default function Home() {
             <Sparkles className="h-6 w-6 text-miku dark:text-mikuLight" />
             <h2 className="text-2xl font-semibold text-foreground">{t.hobbies[language]}</h2>
           </div>
-          <Card className="hover:shadow-lg transition-shadow duration-300">
+          <Card className="bg-background/40 dark:bg-[#181a1b]/40 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl hover:shadow-miku/10 dark:hover:shadow-mikuLight/10 transition-all duration-300">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
