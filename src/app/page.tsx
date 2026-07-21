@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { InteractiveDemos } from "@/components/InteractiveDemos";
 import { 
@@ -77,7 +77,7 @@ export default function Home() {
   const hobbiesRef = useRef<HTMLDivElement>(null);
   const contactoRef = useRef<HTMLDivElement>(null);
 
-  const refs = {
+  const refs = useMemo(() => ({
     presentacion: presentacionRef,
     formacion: formacionRef,
     experiencia: experienciaRef,
@@ -85,7 +85,7 @@ export default function Home() {
     maquetas: maquetasRef,
     hobbies: hobbiesRef,
     contacto: contactoRef,
-  };
+  }), []);
 
   // Modificar el useEffect del IntersectionObserver para incluir 'refs' en el array de dependencias
   useEffect(() => {
