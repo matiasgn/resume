@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { InteractiveDemos } from "@/components/InteractiveDemos";
 import { 
@@ -77,7 +77,7 @@ export default function Home() {
   const hobbiesRef = useRef<HTMLDivElement>(null);
   const contactoRef = useRef<HTMLDivElement>(null);
 
-  const refs = {
+  const refs = useMemo(() => ({
     presentacion: presentacionRef,
     formacion: formacionRef,
     experiencia: experienciaRef,
@@ -85,7 +85,7 @@ export default function Home() {
     maquetas: maquetasRef,
     hobbies: hobbiesRef,
     contacto: contactoRef,
-  };
+  }), []);
 
   // Modificar el useEffect del IntersectionObserver para incluir 'refs' en el array de dependencias
   useEffect(() => {
@@ -220,13 +220,15 @@ export default function Home() {
       es: {
         Frontend: ["Vue.js", "React", "HTML", "CSS", "JavaScript", "Bulma", "Material UI", "Tailwind", "jQuery"],
         Backend: ["Laravel", "PHP", "Node.js", "C#", "SQL", "MySQL", "PostgreSQL", "Amplify", "AWS Lambda", "API REST", "Python"],
-        DevOps: ["Docker", "AWS", "S3", "Git"],
+        DevOps: ["Docker", "AWS", "S3", "Git", "GCP"],
+        IA: ["LLMs", "MCP", "RAG", "Vertex AI"],
         Otros: ["Arduino", "IoT", "Automatización", "Art-Net", "DMX"]
       },
       en: {
         Frontend: ["Vue.js", "React", "HTML", "CSS", "JavaScript", "Bulma", "Material UI", "Tailwind", "jQuery"],
         Backend: ["Laravel", "PHP", "Node.js", "C#", "SQL", "MySQL", "PostgreSQL", "Amplify", "AWS Lambda", "REST API", "Python"],
-        DevOps: ["Docker", "AWS", "S3", "Git"],
+        DevOps: ["Docker", "AWS", "S3", "Git", "GCP"],
+        AI: ["LLMs", "MCP", "RAG", "Vertex AI"],
         Others: ["Arduino", "IoT", "Automation", "Art-Net", "DMX"]
       }
     },
@@ -277,34 +279,46 @@ export default function Home() {
     experiences: [
       {
         es: {
-          title: "Desarrollador Full Stack",
+          title: "Desarrollador Full stack",
           company: "Xinerlink",
           description: "Xinerlink (Remoto) | Ago 2021 - Actualidad",
-          content: `Participo en el desarrollo y soporte de aplicaciones para la gestión documental y automatización de procesos en RRHH, incluyendo el proyecto DOCS IA (plataforma inteligente con IA para extracción y búsqueda de documentos). He trabajado en la integración de servicios en la nube (AWS Lambda, Amplify, DynamoDB, S3), soporte de sistemas existentes y en proyectos de migración masiva de documentos y datos.`,
-          technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Migración de documentos"]
+          content: `<ul class='list-disc pl-5'>
+            <li class='mb-2'>Participación en el diseño e implementación de <strong>Xavi</strong>, una plataforma de agentes de IA para RRHH basada en <strong>LLMs, MCP y RAG</strong>, integrando sistemas corporativos mediante APIs.</li>
+            <li class='mb-2'>Desarrollo de un asistente conversacional con <strong>RAG</strong> sobre <strong>Google Cloud Platform (Vertex AI)</strong> para consultar una base de conocimiento corporativa utilizando documentación interna.</li>
+            <li class='mb-2'>Implementación de funcionalidades de IA en el gestor documental para analizar documentos, extraer información relevante y mejorar la búsqueda inteligente.</li>
+            <li class='mb-2'>Desarrollo y mantenimiento de plataformas de RRHH y gestión documental utilizando Laravel, Node.js, SQL Server y AWS.</li>
+            <li>Desarrollo e integración de APIs REST y microservicios, participando en el diseño de soluciones y arquitectura de sistemas.</li>
+          </ul>`,
+          technologies: ["LLMs", "MCP", "RAG", "Vertex AI", "Laravel", "Node.js", "SQL Server", "AWS"]
         },
         en: {
           title: "Full Stack Developer",
           company: "Xinerlink",
           description: "Xinerlink (Remote) | Aug 2021 - Present",
-          content: `I participate in the development and support of applications for document management and process automation in HR, including the DOCS IA project (an intelligent platform with AI for document extraction and search). I have worked on integrating cloud services (AWS Lambda, Amplify, DynamoDB, S3), supporting existing systems, and on large-scale document and data migration projects.`,
-          technologies: ["SQL Server", "Ubuntu Server", "Laravel", "Node.js", "AWS Lambda", "Amplify", "DynamoDB", "S3", "Google Drive", "Document migration"]
+          content: `<ul class='list-disc pl-5'>
+            <li class='mb-2'>Participated in the design and implementation of <strong>Xavi</strong>, an AI agent platform for HR based on <strong>LLMs, MCP, and RAG</strong>, integrating corporate systems via APIs.</li>
+            <li class='mb-2'>Developed a conversational assistant with <strong>RAG</strong> on <strong>Google Cloud Platform (Vertex AI)</strong> to query a corporate knowledge base using internal documentation.</li>
+            <li class='mb-2'>Implemented AI features in the document management system to analyze documents, extract relevant information, and improve smart search.</li>
+            <li class='mb-2'>Developed and maintained HR and document management platforms using Laravel, Node.js, SQL Server, and AWS.</li>
+            <li>Developed and integrated REST APIs and microservices, participating in solution design and system architecture.</li>
+          </ul>`,
+          technologies: ["LLMs", "MCP", "RAG", "Vertex AI", "Laravel", "Node.js", "SQL Server", "AWS"]
         }
       },
       {
         es: {
           title: "Desarrollador Full Stack (Freelance)",
-          company: "USACH",
-          description: "USACH (Remoto) | Ago 2023 - Ene 2024",
-          content: `<div><div class='font-semibold mb-1'>Sistema de trazabilidad documental</div><div class='mb-4'>Trabajé sobre un sistema existente en Laravel con Inertia y Vue.js, orientado a la trazabilidad documental. Me encargué de modificar el sistema, agregar nuevos módulos y funcionalidades, y adaptar el flujo de trabajo a los requerimientos de la universidad. Mi labor incluyó tanto el análisis del código heredado como la integración entre frontend y backend para asegurar la correcta trazabilidad de los documentos.</div><div class='font-semibold mb-1'>Plataforma de gestión de pagos a proveedores</div><div>Desarrollé una plataforma para revisar y gestionar pagos a proveedores, donde los usuarios podían realizar solicitudes y los responsables aprobar o rechazar pagos. Implementado en Laravel y jQuery, consultando bases de datos Oracle.</div></div>`,
-          technologies: ["Laravel 10", "Inertia", "Vue 3", "jQuery", "Oracle"]
+          company: "Freelance",
+          description: "Freelance (Remoto) | Ago 2023 - Actualidad",
+          content: `<div><div class='font-semibold mb-1'>BionicVision</div><div class='mb-4'>Desarrollo de plataforma de gestión de asistencia y RR.HH. para permisos, vacaciones y reportabilidad. Implementación de integraciones vía API con sistemas como <strong>BioTime, SIRH, SMC y SATurno</strong>, centralizando información y automatizando procesos operacionales.</div><div class='font-semibold mb-1'>USACH: Sistema trazabilidad documental (STD2)</div><div>Se utilizaron las tecnologías Laravel 10, Inertia y Vue 3 en la creación de nuevos módulos, implementación de mejoras y la introducción de nuevas funcionalidades.</div></div>`,
+          technologies: ["Laravel 10", "Inertia", "Vue 3", "APIs Rest"]
         },
         en: {
           title: "Full Stack Developer (Freelance)",
-          company: "USACH",
-          description: "USACH (Remote) | Aug 2023 - Jan 2024",
-          content: `<div><div class='font-semibold mb-1'>Document traceability system</div><div class='mb-4'>Worked on an existing Laravel system with Inertia and Vue.js, focused on document traceability. Responsible for modifying the system, adding new modules and features, and adapting the workflow to the university's requirements. My work included analyzing legacy code and integrating frontend and backend to ensure proper document traceability.</div><div class='font-semibold mb-1'>Supplier payments management platform</div><div>Developed a platform for reviewing and managing supplier payments, allowing users to submit requests and managers to approve or reject payments. Built with Laravel and jQuery, querying Oracle databases.</div></div>`,
-          technologies: ["Laravel 10", "Inertia", "Vue 3", "jQuery", "Oracle"]
+          company: "Freelance",
+          description: "Freelance (Remote) | Aug 2023 - Present",
+          content: `<div><div class='font-semibold mb-1'>BionicVision</div><div class='mb-4'>Development of attendance and HR management platform for permits, vacations, and reporting. Implemented API integrations with systems like <strong>BioTime, SIRH, SMC, and SATurno</strong>, centralizing information and automating operational processes.</div><div class='font-semibold mb-1'>USACH: Document traceability system (STD2)</div><div>Used Laravel 10, Inertia, and Vue 3 to create new modules, implement improvements, and introduce new features.</div></div>`,
+          technologies: ["Laravel 10", "Inertia", "Vue 3", "REST APIs"]
         }
       },
       {
@@ -312,15 +326,15 @@ export default function Home() {
           title: "Desarrollador Full Stack",
           company: "Lirmi",
           description: "Lirmi (Remoto) | Abr 2021 - Ago 2021",
-          content: `Desarrollé y mejoré módulos de un sistema de gestión curricular enfocado en planificación, evaluación y libro de clases digital. Me encargué de implementar nuevas funcionalidades, optimizar módulos existentes y adaptar el sistema a las necesidades de los usuarios. Trabajé con VueJS, Laravel, Bulma y PostgreSQL, colaborando con el equipo para asegurar una experiencia educativa digital robusta y eficiente.`,
-          technologies: ["VueJS", "Laravel", "Bulma", "PostgreSQL"]
+          content: `Desarrollo de software de gestión curricular con enfoque en planificación, evaluación y libro de clases digital. Uso de tecnologías VueJS y Laravel. Responsable de la resolución de incidencias y la implementación de mejoras continuas en la plataforma.`,
+          technologies: ["VueJS", "Laravel"]
         },
         en: {
           title: "Full Stack Developer",
           company: "Lirmi",
           description: "Lirmi (Remote) | Apr 2021 - Aug 2021",
-          content: `Developed and improved modules for a curriculum management system focused on planning, assessment, and digital gradebooks. I implemented new features, optimized existing modules, and adapted the system to user needs. Worked with VueJS, Laravel, Bulma, and PostgreSQL, collaborating with the team to ensure a robust and efficient digital educational experience.`,
-          technologies: ["VueJS", "Laravel", "Bulma", "PostgreSQL"]
+          content: `Developed curriculum management software focused on planning, evaluation, and digital class books. Used VueJS and Laravel technologies. Responsible for resolving incidents and implementing continuous improvements on the platform.`,
+          technologies: ["VueJS", "Laravel"]
         }
       },
       {
@@ -328,15 +342,15 @@ export default function Home() {
           title: "Analista Programador",
           company: "Xinerlink",
           description: "Xinerlink, Santiago | Nov 2018 - Abr 2021",
-          content: `En esta etapa inicial en Xinerlink, me enfoqué en el desarrollo de aplicaciones web utilizando principalmente PHP puro y jQuery, conectando con procedimientos almacenados (SP) en colaboración con un DBA. Mi trabajo se centró en el frontend, empleando Bootstrap y AdminLTE para crear interfaces intuitivas y funcionales. El principal desafío fue extraer y mostrar datos del gestor documental OnBase en sistemas web personalizados, facilitando el acceso y la gestión de información para los usuarios internos.`,
-          technologies: ["PHP OOP", "jQuery", "SQL Server", "Transact-SQL", "Highchart", "AdminLTE"]
+          content: `Encargado de proponer soluciones innovadoras, crear maquetas, desarrollar tanto en el backend como en el frontend, y asegurar la integración efectiva con otros sistemas en entornos de desarrollo.`,
+          technologies: ["PHP", "jQuery", "SQL Server"]
         },
         en: {
           title: "Programmer Analyst",
           company: "Xinerlink",
           description: "Xinerlink, Santiago | Nov 2018 - Apr 2021",
-          content: `In this initial stage at Xinerlink, I focused on developing web applications mainly using pure PHP and jQuery, connecting to stored procedures (SP) in collaboration with a DBA. My work was centered on the frontend, using Bootstrap and AdminLTE to create intuitive and functional interfaces. The main challenge was extracting and displaying data from the OnBase document manager in custom web systems, facilitating access and information management for internal users.`,
-          technologies: ["PHP OOP", "jQuery", "SQL Server", "Transact-SQL", "Highchart", "AdminLTE"]
+          content: `In charge of proposing innovative solutions, creating mockups, developing both backend and frontend, and ensuring effective integration with other systems in development environments.`,
+          technologies: ["PHP", "jQuery", "SQL Server"]
         }
       },
       {
@@ -344,15 +358,15 @@ export default function Home() {
           title: "Programador",
           company: "Ventas Técnicas",
           description: "Ventas Técnicas, Santiago | Jun 2018 - Nov 2018",
-          content: `Me encargué del mantenimiento y evolución de un sistema que permitía a los clientes revisar métricas de call center y el desempeño de sus campañas. Realicé modificaciones en procedimientos almacenados (SP) y desarrollé interfaces de datos para clientes, así como la automatización de correos para campañas de empresas como WOM y Claro. Además, mantuve y mejoré el portal de indicadores utilizando Highchart, asegurando la disponibilidad y claridad de la información para la toma de decisiones.`,
-          technologies: ["Transact-SQL", "C#", "Highchart", "PHP", "Visual Studio", ".NET"]
+          content: `Responsable de la generación de informes KPI mediante Transact-SQL, desarrollo de interfaces de datos, mantenimiento del portal de indicadores con gráficos Highchart y gestión de sistemas internos de procesos.`,
+          technologies: ["Transact-SQL", "Highchart", "C#", "PHP"]
         },
         en: {
           title: "Programmer",
           company: "Ventas Técnicas",
           description: "Ventas Técnicas, Santiago | Jun 2018 - Nov 2018",
-          content: `I was responsible for maintaining and evolving a system that allowed clients to review call center metrics and campaign performance. I made changes to stored procedures (SP) and developed data interfaces for clients, as well as automating emails for campaigns for companies like WOM and Claro. I also maintained and improved the indicators portal using Highchart, ensuring the availability and clarity of information for decision-making.`,
-          technologies: ["Transact-SQL", "C#", "Highchart", "PHP", "Visual Studio", ".NET"]
+          content: `Responsible for generating KPI reports using Transact-SQL, developing data interfaces, maintaining the indicators portal with Highchart graphs, and managing internal process systems.`,
+          technologies: ["Transact-SQL", "Highchart", "C#", "PHP"]
         }
       },
       {
@@ -360,14 +374,14 @@ export default function Home() {
           title: "Práctica Analista Programador",
           company: "Rheem Chile",
           description: "Rheem Chile, Estación Central | Feb 2018 - Mar 2018",
-          content: `Desarrollé desde cero un sistema para la gestión de mantención industrial, realizando el levantamiento de requerimientos, modelado y desarrollo completo de la aplicación. El sistema fue diseñado para el departamento de mantenimiento, permitiendo registrar y gestionar actividades y tareas. Realicé pruebas en red local y utilicé PHP7 (POO), MySQL, AdminLTE, Bootstrap y jQuery para crear una solución robusta y adaptable a las necesidades del área.`,
+          content: `Participación integral en el desarrollo de un sistema para el departamento de mantención industrial, centrado en la gestión de actividades de técnicos. Utilización de PHP7 (POO) con base de datos MySQL y empleo de la plantilla AdminLTE con Bootstrap y jQuery para el frontend. Funciones incluyeron la toma de requerimientos, moldeamiento y desarrollo del sistema.`,
           technologies: ["PHP7 (OOP)", "MySQL", "AdminLTE", "Bootstrap", "jQuery"]
         },
         en: {
           title: "Programming Analyst Intern",
           company: "Rheem Chile",
           description: "Rheem Chile, Estación Central | Feb 2018 - Mar 2018",
-          content: `Developed from scratch a system for industrial maintenance management, gathering requirements, modeling, and full application development. The system was designed for the maintenance department, allowing the registration and management of activities and tasks. I performed local network tests and used PHP7 (OOP), MySQL, AdminLTE, Bootstrap, and jQuery to create a robust and adaptable solution for the area's needs.`,
+          content: `Comprehensive participation in the development of a system for the industrial maintenance department, focused on managing technicians' activities. Used PHP7 (OOP) with MySQL database and AdminLTE template with Bootstrap and jQuery for the frontend. Functions included requirements gathering, modeling, and system development.`,
           technologies: ["PHP7 (OOP)", "MySQL", "AdminLTE", "Bootstrap", "jQuery"]
         }
       }
@@ -519,6 +533,7 @@ export default function Home() {
 
   return (
     <>
+      <div className="print:hidden">
       {/* Navbar fijo */}
       <nav className="fixed top-0 left-0 w-full z-20 bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border-b border-border flex justify-center shadow-sm transition-colors">
         <div className="w-full max-w-7xl px-4">
@@ -597,7 +612,7 @@ export default function Home() {
         >
           <div className="relative w-full">
             <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-miku to-mikuLight opacity-20 blur-lg"></div>
-            <div className="relative bg-background/80 backdrop-blur-sm p-4 md:p-8 rounded-lg border border-border">
+            <div className="relative bg-background/60 dark:bg-[#181a1b]/60 backdrop-blur-xl p-6 md:p-10 rounded-2xl border border-border/50 shadow-2xl">
               <motion.h1 
                 className="text-3xl md:text-4xl font-bold text-foreground text-center"
                 initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
@@ -612,7 +627,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                {language === "es" ? "Desarrollador Full Stack" : "Full Stack Developer"}
+                {language === "es" ? "Desarrollador Full Stack | Automatización e IA" : "Full Stack Developer | Automation & AI"}
               </motion.h2>
               <motion.p
                 className="max-w-2xl mx-auto text-center text-foreground font-medium mt-2 text-base md:text-lg"
@@ -622,6 +637,18 @@ export default function Home() {
               >
                 {t.presentacionText[language]}
               </motion.p>
+              
+              <motion.div 
+                className="flex justify-center mt-8"
+                initial={animatedSection === 'presentacion' ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <Button onClick={() => window.print()} className="gap-2 bg-miku hover:bg-miku/90 text-white dark:bg-mikuLight dark:text-black font-semibold rounded-full px-6 py-6 shadow-lg hover:shadow-miku/50 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  Descargar CV PDF (Harvard)
+                </Button>
+              </motion.div>
             </div>
           </div>
         </motion.header>
@@ -649,7 +676,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+                <Card className="bg-background/40 dark:bg-[#181a1b]/40 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl hover:shadow-miku/10 dark:hover:shadow-mikuLight/10 transition-all duration-300 hover:translate-y-[-2px]">
                   <CardHeader>
                     <CardTitle>{item[language].title}</CardTitle>
                     <CardDescription>{item[language].description}</CardDescription>
@@ -696,7 +723,7 @@ export default function Home() {
                     )}
                     <div className="mt-2 flex flex-wrap gap-2">
                       {item[language].technologies?.map((tech) => (
-                        <Badge key={tech} variant="secondary">{tech}</Badge>
+                        <Badge key={tech} variant="secondary" className="hover:bg-miku/10 hover:text-miku dark:hover:bg-mikuLight/10 dark:hover:text-mikuLight transition-colors cursor-default">{tech}</Badge>
                       ))}
                     </div>
                   </CardContent>
@@ -722,7 +749,7 @@ export default function Home() {
                   <h3 className="font-semibold text-miku dark:text-mikuLight mb-2 text-base">{cat}</h3>
                   <div className="flex flex-wrap gap-2">
                     {skills.map((skill) => (
-                      <Badge key={skill} className="hover:scale-105 transition-transform">{skill}</Badge>
+                      <Badge key={skill} className="hover:scale-105 hover:bg-miku/90 dark:hover:bg-mikuLight/90 transition-all">{skill}</Badge>
                     ))}
                   </div>
                 </div>
@@ -771,7 +798,7 @@ export default function Home() {
             <Sparkles className="h-6 w-6 text-miku dark:text-mikuLight" />
             <h2 className="text-2xl font-semibold text-foreground">{t.hobbies[language]}</h2>
           </div>
-          <Card className="hover:shadow-lg transition-shadow duration-300">
+          <Card className="bg-background/40 dark:bg-[#181a1b]/40 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl hover:shadow-miku/10 dark:hover:shadow-mikuLight/10 transition-all duration-300">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
@@ -860,6 +887,59 @@ export default function Home() {
           </Card>
         </motion.section>
       </main>
+      </div>
+
+      {/* Print-only Harvard format CV */}
+      <div className="hidden print:block w-full max-w-4xl mx-auto p-8 bg-white text-black font-serif text-sm leading-relaxed">
+        <h1 className="text-4xl font-bold text-center mb-1">Matias Guerrero</h1>
+        <p className="text-center text-base mb-6 border-b border-gray-400 pb-4">
+          +56 9 5346 6236 &bull; matiasguerrero.dev@gmail.com &bull; linkedin.com/in/matiasguerreron &bull; github.com/matiasguerreron
+        </p>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.presentacion[language]}</h2>
+        <p className="mb-6">{t.presentacionText[language]}</p>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.experiencia[language]}</h2>
+        <div className="flex flex-col gap-4 mb-6">
+          {t.experiences.map((item, idx) => {
+            const dateParts = item[language].description.split('|');
+            const dateStr = dateParts.length > 1 ? dateParts[1].trim() : '';
+            return (
+              <div key={idx}>
+                <div className="flex justify-between font-bold">
+                  <span className="text-base">{item[language].title}</span>
+                  <span>{dateStr}</span>
+                </div>
+                <div className="font-semibold italic mb-1">{item[language].company}</div>
+                <div className="pl-4 text-justify" dangerouslySetInnerHTML={{ __html: item[language].content }}></div>
+                {item[language].technologies && item[language].technologies.length > 0 && (
+                   <div className="pl-4 mt-1 text-xs italic">Stack: {item[language].technologies.join(", ")}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.formacion[language]}</h2>
+        <div className="flex flex-col gap-2 mb-6">
+          {t.education.map((item, idx) => (
+            <div key={idx} className="flex justify-between">
+              <span className="font-bold">{item[language].title}</span>
+              <span>{item[language].description}</span>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.habilidades[language]}</h2>
+        <div className="mb-6">
+          {Object.entries(t.skillsByCategory[language]).map(([cat, skills]) => (
+            <div key={cat} className="mb-1">
+              <span className="font-bold">{cat}: </span>
+              <span>{skills.join(", ")}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
