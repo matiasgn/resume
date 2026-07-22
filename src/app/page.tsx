@@ -533,6 +533,7 @@ export default function Home() {
 
   return (
     <>
+      <div className="print:hidden">
       {/* Navbar fijo */}
       <nav className="fixed top-0 left-0 w-full z-20 bg-background/80 dark:bg-[#181A1B]/80 backdrop-blur-md border-b border-border flex justify-center shadow-sm transition-colors">
         <div className="w-full max-w-7xl px-4">
@@ -643,11 +644,9 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
               >
-                <Button asChild className="gap-2 bg-miku hover:bg-miku/90 text-white dark:bg-mikuLight dark:text-black font-semibold rounded-full px-6 py-6 shadow-lg hover:shadow-miku/50 transition-all">
-                  <a href="/Matias_Guerrero_CV.pdf" download="Matias_Guerrero_CV.pdf">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    Descargar CV PDF
-                  </a>
+                <Button onClick={() => window.print()} className="gap-2 bg-miku hover:bg-miku/90 text-white dark:bg-mikuLight dark:text-black font-semibold rounded-full px-6 py-6 shadow-lg hover:shadow-miku/50 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  Descargar CV PDF (Harvard)
                 </Button>
               </motion.div>
             </div>
@@ -888,6 +887,59 @@ export default function Home() {
           </Card>
         </motion.section>
       </main>
+      </div>
+
+      {/* Print-only Harvard format CV */}
+      <div className="hidden print:block w-full max-w-4xl mx-auto p-8 bg-white text-black font-serif text-sm leading-relaxed">
+        <h1 className="text-4xl font-bold text-center mb-1">Matias Guerrero</h1>
+        <p className="text-center text-base mb-6 border-b border-gray-400 pb-4">
+          +56 9 5346 6236 &bull; matiasguerrero.dev@gmail.com &bull; linkedin.com/in/matiasguerreron &bull; github.com/matiasguerreron
+        </p>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.presentacion[language]}</h2>
+        <p className="mb-6">{t.presentacionText[language]}</p>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.experiencia[language]}</h2>
+        <div className="flex flex-col gap-4 mb-6">
+          {t.experiences.map((item, idx) => {
+            const dateParts = item[language].description.split('|');
+            const dateStr = dateParts.length > 1 ? dateParts[1].trim() : '';
+            return (
+              <div key={idx}>
+                <div className="flex justify-between font-bold">
+                  <span className="text-base">{item[language].title}</span>
+                  <span>{dateStr}</span>
+                </div>
+                <div className="font-semibold italic mb-1">{item[language].company}</div>
+                <div className="pl-4 text-justify" dangerouslySetInnerHTML={{ __html: item[language].content }}></div>
+                {item[language].technologies && item[language].technologies.length > 0 && (
+                   <div className="pl-4 mt-1 text-xs italic">Stack: {item[language].technologies.join(", ")}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.formacion[language]}</h2>
+        <div className="flex flex-col gap-2 mb-6">
+          {t.education.map((item, idx) => (
+            <div key={idx} className="flex justify-between">
+              <span className="font-bold">{item[language].title}</span>
+              <span>{item[language].description}</span>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="text-lg font-bold border-b border-gray-400 mb-3 uppercase tracking-wider">{t.habilidades[language]}</h2>
+        <div className="mb-6">
+          {Object.entries(t.skillsByCategory[language]).map(([cat, skills]) => (
+            <div key={cat} className="mb-1">
+              <span className="font-bold">{cat}: </span>
+              <span>{skills.join(", ")}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
